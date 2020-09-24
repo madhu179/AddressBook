@@ -35,7 +35,13 @@ public class AddressBookMain
 	   email = sc.nextLine();
        ab.editcont(fn,ln,addr,stt,zp,phn,email);
        System.out.println("Details Edited Succesfully");
-	   
+       System.out.println("Enter the name of the person to delete his details");
+	   name=sc.nextLine();
+	   String[] n = name.split(" ");
+	   fn = n[0];
+	   ln = n[1];
+	   ab.delcont(fn,ln);
+	   System.out.println("The person's details are deleted Succesfully"); 
 
 	   
 	   

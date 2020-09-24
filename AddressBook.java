@@ -34,5 +34,25 @@ public class AddressBook
       cnt.add(cc1);
     }
 
+    public void delcont(String firstName,String lastName)
+    {
+    	Iterator iter = cnt.iterator();
+		int i=0;
+      while (iter.hasNext()) {
+        
+      	Contact c = (Contact) iter.next();
+   
+      	
+         if(firstName.equals(c.getFirstName()) && lastName.equals(c.getLastName()))
+         {
+         	cnt.remove(i);
+         	break;
+         }
+         i+=1;
+         
+      }
+
+    }
+
 	
 }
