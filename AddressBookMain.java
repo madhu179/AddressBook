@@ -4,7 +4,7 @@ public class AddressBookMain
 	public static void main(String args[])
 	{
 	   String name;
-	   
+	   int nof;
 	   Scanner sc = new Scanner(System.in);
 	   Contact c = new Contact("Arjun","Sama","Building 1 Hyd","Telangana",523443,9999999,"arjunsama@gmail.com");
 	   
@@ -43,7 +43,23 @@ public class AddressBookMain
 	   ab.delcont(fn,ln);
 	   System.out.println("The person's details are deleted Succesfully"); 
 
-	   
+	   System.out.println("Enter the no of people to add");
+       nof = Integer.parseInt(sc.nextLine());
+	   for(int j=0;j<nof;j++)
+	   {
+	   System.out.println("Enter FirstName,LastName,Address,State,zip,phone number,email to add into address book");
+	   	fn = sc.nextLine();
+	   ln = sc.nextLine();
+	   addr = sc.nextLine();
+	   stt = sc.nextLine();
+	   zp = Double.parseDouble(sc.nextLine());
+	   phn = Double.parseDouble(sc.nextLine());
+	   email = sc.nextLine();
+	   Contact c2 = new Contact(fn,ln,addr,stt,zp,phn,email);
+	   ab.addcont(c2);
+	   }
+
+	   System.out.println("Details of multiple people added Succesfully");
 	   
 	 
 	}
