@@ -1,10 +1,17 @@
+import java.util.*;
 public class AddressBook
 {
-	Contact c = new Contact();
-	public AddressBook(Contact c)
+	ArrayList<Contact> cnt = new ArrayList<Contact>();
+	public AddressBook()
 	{
-        this.c = c;
+       
 	}
+
+	public void addcont(Contact c1)
+	{
+		cnt.add(c1);
+	}
+
 
 	
 }
