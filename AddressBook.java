@@ -37,9 +37,9 @@ public class AddressBook
       }
     }
   }
+  return false;
+}
 
-    return false;
-  }
 
 
 	public void editcont(Contact c)

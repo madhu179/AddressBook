@@ -12,6 +12,7 @@ public class AddressBookMain
       String fname,lname,address,state,email,bookName="";
       long zip,phno;
       boolean check;
+      Contact c;
       while(true)
        {
        	System.out.println("Choose one of the following : ");
@@ -37,8 +38,17 @@ public class AddressBookMain
           bookName = get_book_name();
           if(AddressBookList.containsKey(bookName)){
             ab = (AddressBook) AddressBookList.get(bookName);
-            ab.addcont(Console_Input());
+            c = Console_Input();
+            check = ab.check_if_contact_exists(c.getFirstName());
+            if(check)
+            {
+              System.out.println("A person already exists with the same FirstName,Duplicate entry not allowed!");
+            }
+            else
+            {
+            ab.addcont(c);
             System.out.println("Contact added succesfully to the AddressBook "+bookName);
+            }
           }
           else
           {
@@ -111,8 +121,17 @@ public class AddressBookMain
            System.out.println("Enter the No of Contacts to add");
            count = Integer.parseInt(sc.nextLine());
            for(int i=0; i<count;i++)
-           {
-              ab.addcont(Console_Input());
+           { 
+            c = Console_Input();
+            check = ab.check_if_contact_exists(c.getFirstName());
+            if(check)
+            {
+              System.out.println("A person already exists with the same FirstName,Duplicate entry not allowed!");
+            }
+            else
+            {
+              ab.addcont(c);
+            }
            }
            System.out.println("All contacts added succesfully");
           }
@@ -131,9 +150,9 @@ public class AddressBookMain
             ab = (AddressBook) AddressBookList.get(bookName); 
             cl = ab.getAddressBook();
             System.out.println("The contacts in the address book "+bookName+" are :");
-            for(Contact c : cl)
+            for(Contact cc : cl)
             {
-               ab.printcont(c.getFirstName());
+               ab.printcont(cc.getFirstName());
             }
          }
          else
