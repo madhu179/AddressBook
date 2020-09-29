@@ -1,7 +1,9 @@
 import java.util.*;
 public class AddressBook
 {
-	private ArrayList<Contact> contact ;
+	 ArrayList<Contact> contact ;
+
+
 
 	public AddressBook()
 	{
@@ -85,7 +87,6 @@ public void printcont(String firstName)
     {
       if(firstName.equals(s.getFirstName()))
       {
-        System.out.println("The Details of the person are :");
         System.out.println("First Name : "+s.getFirstName());
         System.out.println("Last Name : "+s.getLastName());
         System.out.println("Address : "+s.getAddress());
@@ -93,6 +94,7 @@ public void printcont(String firstName)
         System.out.println("Zip : "+s.getZip());
         System.out.println("Phone Number : "+s.getPhoneNumber());
         System.out.println("Email : "+s.getEmail());
+        System.out.println(" ");
       }
     }
   }

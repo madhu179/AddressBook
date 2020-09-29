@@ -3,93 +3,146 @@ public class AddressBookMain
 {
 
 	public static void main(String args[])
-	{
-      AddressBook ab = new AddressBook();
+	{  
+      HashMap<String, AddressBook> AddressBookList = new  HashMap<String, AddressBook>();
+      AddressBook ab;
+      ArrayList<Contact> cl;
       Scanner sc = new Scanner(System.in);
       int option,count;
-      String fname,lname,address,state,email;
+      String fname,lname,address,state,email,bookName="";
       long zip,phno;
       boolean check;
       while(true)
        {
        	System.out.println("Choose one of the following : ");
-       	System.out.println("1. Add a Contact to Address Book");
-       	System.out.println("2. Edit a Contact");
-       	System.out.println("3. Delete a Contact");
-       	System.out.println("4. Add Multiple Contacts");
-       	System.out.println("5. Print Details of a Contact");
-       	System.out.println("6. Exit");
+       	System.out.println("1. Create a AddressBook");
+       	System.out.println("2. Add a contact to a particular AddressBook");
+        System.out.println("3. Edit a contact to a particular AddressBook");
+       	System.out.println("4. Delete a Contact in a particular AddressBook");
+       	System.out.println("5. Add Multiple Contacts to a particular AddressBook");
+       	System.out.println("6. Print Details of a AddressBook");
+       	System.out.println("7. Exit");
 
        	option = Integer.parseInt(sc.nextLine());
 
-       	if(option == 1)
-       	{
-           ab.addcont(Console_Input());
-           System.out.println("Contact added Succesfully");
-       	}
+        if(option == 1)
+        {  
+          bookName = get_book_name();
+          AddressBookList.put(bookName,new AddressBook());
+          System.out.println("A new AddressBook with name "+bookName+" is created succesfully");
+        }
 
        	else if(option == 2)
        	{
-           System.out.println("Enter the First Name of the Contact to be edited");
-           fname = sc.nextLine();
-           check = ab.check_if_contact_exists(fname);
-           if(check)
-           {
-	           ab.editcont(Console_Input());
-	           System.out.println("Details Edited Succesfully");
-           }
-
-           else
-           {
-           	   System.out.println("No Contact Exists with that First Name");
-           }
+          bookName = get_book_name();
+          if(AddressBookList.containsKey(bookName)){
+            ab = (AddressBook) AddressBookList.get(bookName);
+            ab.addcont(Console_Input());
+            System.out.println("Contact added succesfully to the AddressBook "+bookName);
+          }
+          else
+          {
+            System.out.println("No AddressBook exists with the name "+bookName);
+          }
+          
        	}
 
        	else if(option == 3)
        	{
-           System.out.println("Enter the First Name of the Contact to be deleted");
-           fname = sc.nextLine();
-           check = ab.check_if_contact_exists(fname);
-           if(check)
+
+          bookName = get_book_name();
+          if(AddressBookList.containsKey(bookName)){
+            ab = (AddressBook) AddressBookList.get(bookName);
+            System.out.println("Enter the First Name of the Contact to be edited");
+            fname = sc.nextLine();
+            check = ab.check_if_contact_exists(fname);
+            if(check)
            {
-               	ab.delcont(fname);
-           	    System.out.println("Contact Deleted Succesfully");
+             ab.editcont(Console_Input());
+             AddressBookList.replace(bookName,ab);
+             System.out.println("Details Edited Succesfully");
            }
 
            else
            {
-           		  System.out.println("No Contact Exists with that First Name");
+               System.out.println("No Contact Exists with that First Name");
            }
+          }
+          else
+          {
+            System.out.println("No AddressBook exists with the name "+bookName);
+          }
+
        	}
 
        	else if(option == 4)
        	{
-       	   System.out.println("Enter the No of Contacts to add");
-       	   count = Integer.parseInt(sc.nextLine());
-       	   for(int i=0; i<count;i++)
-       	   {
-  	          ab.addcont(Console_Input());
-           }
-           System.out.println("All contacts added succesfully");
-       	}
-
-       	else if(option == 5)
-       	{
-           System.out.println("Enter the First Name of the Contact to be displayed");
-           fname = sc.nextLine();
-           check = ab.check_if_contact_exists(fname);
-           if(check)
+          bookName = get_book_name();
+          if(AddressBookList.containsKey(bookName)){
+            ab = (AddressBook) AddressBookList.get(bookName);
+            System.out.println("Enter the First Name of the Contact to be edited");
+            fname = sc.nextLine();
+            check = ab.check_if_contact_exists(fname);
+            if(check)
            {
-               	ab.printcont(fname);
+             ab.delcont(fname);
+             AddressBookList.replace(bookName,ab);
+             System.out.println("Contact Deleted Succesfully");
            }
 
            else
            {
-           		System.out.println("No Contact Exists with that First Name");
+               System.out.println("No Contact Exists with that First Name");
            }
+          }
+          else
+          {
+            System.out.println("No AddressBook exists with the name "+bookName);
+          }
+
        	}
 
-       	else
+       	else if(option == 5)
+       	{
+          bookName = get_book_name();
+          if(AddressBookList.containsKey(bookName))
+          {
+           ab = (AddressBook) AddressBookList.get(bookName);  
+           System.out.println("Enter the No of Contacts to add");
+           count = Integer.parseInt(sc.nextLine());
+           for(int i=0; i<count;i++)
+           {
+              ab.addcont(Console_Input());
+           }
+           System.out.println("All contacts added succesfully");
+          }
+          else
+          {
+            System.out.println("No AddressBook exists with the name "+bookName);
+          }
+       	   
+       	}
+
+       	else if(option == 6)
+       	{
+           System.out.println("Enter the name of the address book");
+           bookName = sc.nextLine(); 
+           if(AddressBookList.containsKey(bookName)){
+            ab = (AddressBook) AddressBookList.get(bookName); 
+            cl = ab.getAddressBook();
+            System.out.println("The contacts in the address book "+bookName+" are :");
+            for(Contact c : cl)
+            {
+               ab.printcont(c.getFirstName());
+            }
+         }
+         else
+         {
+          System.out.println("No AddressBook exists with the name "+bookName);
+         }
+       	}
+
+       	else if(option == 7)
        	{
        		break;
        	}
@@ -97,6 +150,14 @@ public class AddressBookMain
        }
 	   	 
 	}
+
+  public static String get_book_name()
+  {
+    Scanner sc = new Scanner(System.in);
+    System.out.println("Enter the name of the address book");
+    String bookName = sc.nextLine();
+    return bookName;
+  }
 
   public static Contact Console_Input()
   {
