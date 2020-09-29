@@ -5,8 +5,8 @@ public class Contact
 	public String lastName;
 	public String address;
 	public String State;
-	public double zip;
-	public double phoneNumber;
+	public long zip;
+	public long phoneNumber;
 	public String email;
 
 	public Contact()
@@ -14,7 +14,7 @@ public class Contact
 
 	}
 
-	public Contact(String firstName,String lastName,String address,String State,double zip,double phoneNumber,String email)
+	public Contact(String firstName,String lastName,String address,String State,long zip,long phoneNumber,String email)
 	{
 		this.firstName = firstName;
 		this.lastName= lastName;
@@ -44,11 +44,11 @@ public class Contact
 	{
         return State;
 	}
-    public double getZip()
+    public long getZip()
 	{
         return zip;
 	}
-	public double getPhoneNumber()
+	public long getPhoneNumber()
 	{
         return phoneNumber;
 	}

@@ -1,66 +1,122 @@
 import java.util.*;
 public class AddressBookMain
 {
+
 	public static void main(String args[])
 	{
-	   String name;
-	   int nof;
-	   Scanner sc = new Scanner(System.in);
-	   Contact c = new Contact("Arjun","Sama","Building 1 Hyd","Telangana",523443,9999999,"arjunsama@gmail.com");
-	   
-	   AddressBook ab = new AddressBook();
-	   ab.addcont(c);
-	   System.out.println("Enter FirstName,LastName,Address,State,zip,phone number,email to add into address book");
-	   String fn = sc.nextLine();
-	   String ln = sc.nextLine();
-	   String addr = sc.nextLine();
-	   String stt = sc.nextLine();
-	   Double zp = Double.parseDouble(sc.nextLine());
-	   Double phn = Double.parseDouble(sc.nextLine());
-	   String email = sc.nextLine();
+      AddressBook ab = new AddressBook();
+      Scanner sc = new Scanner(System.in);
+      int option,count;
+      String fname,lname,address,state,email;
+      long zip,phno;
+      boolean check;
+      while(true)
+       {
+       	System.out.println("Choose one of the following : ");
+       	System.out.println("1. Add a Contact to Address Book");
+       	System.out.println("2. Edit a Contact");
+       	System.out.println("3. Delete a Contact");
+       	System.out.println("4. Add Multiple Contacts");
+       	System.out.println("5. Print Details of a Contact");
+       	System.out.println("6. Exit");
 
-	   Contact c1 = new Contact(fn,ln,addr,stt,zp,phn,email);
-	   ab.addcont(c1);
-	   System.out.println("Details added Succesfully");
-	   System.out.println("Enter the Name of the person to edit his details");
-	   name = sc.nextLine();
-       String[] s = name.split(" ");
-	   System.out.println("Enter the new Address,State,zip,phone number,email of the person");
-	   fn = s[0];
-	   ln = s[1];
-	   addr = sc.nextLine();
-	   stt = sc.nextLine();
-	   zp = Double.parseDouble(sc.nextLine());
-	   phn = Double.parseDouble(sc.nextLine());
-	   email = sc.nextLine();
-       ab.editcont(fn,ln,addr,stt,zp,phn,email);
-       System.out.println("Details Edited Succesfully");
-       System.out.println("Enter the name of the person to delete his details");
-	   name=sc.nextLine();
-	   String[] n = name.split(" ");
-	   fn = n[0];
-	   ln = n[1];
-	   ab.delcont(fn,ln);
-	   System.out.println("The person's details are deleted Succesfully"); 
+       	option = Integer.parseInt(sc.nextLine());
 
-	   System.out.println("Enter the no of people to add");
-       nof = Integer.parseInt(sc.nextLine());
-	   for(int j=0;j<nof;j++)
-	   {
-	   System.out.println("Enter FirstName,LastName,Address,State,zip,phone number,email to add into address book");
-	   	fn = sc.nextLine();
-	   ln = sc.nextLine();
-	   addr = sc.nextLine();
-	   stt = sc.nextLine();
-	   zp = Double.parseDouble(sc.nextLine());
-	   phn = Double.parseDouble(sc.nextLine());
-	   email = sc.nextLine();
-	   Contact c2 = new Contact(fn,ln,addr,stt,zp,phn,email);
-	   ab.addcont(c2);
-	   }
+       	if(option == 1)
+       	{
+           ab.addcont(Console_Input());
+           System.out.println("Contact added Succesfully");
+       	}
 
-	   System.out.println("Details of multiple people added Succesfully");
-	   
-	 
+       	else if(option == 2)
+       	{
+           System.out.println("Enter the First Name of the Contact to be edited");
+           fname = sc.nextLine();
+           check = ab.check_if_contact_exists(fname);
+           if(check)
+           {
+	           ab.editcont(Console_Input());
+	           System.out.println("Details Edited Succesfully");
+           }
+
+           else
+           {
+           	   System.out.println("No Contact Exists with that First Name");
+           }
+       	}
+
+       	else if(option == 3)
+       	{
+           System.out.println("Enter the First Name of the Contact to be deleted");
+           fname = sc.nextLine();
+           check = ab.check_if_contact_exists(fname);
+           if(check)
+           {
+               	ab.delcont(fname);
+           	    System.out.println("Contact Deleted Succesfully");
+           }
+
+           else
+           {
+           		  System.out.println("No Contact Exists with that First Name");
+           }
+       	}
+
+       	else if(option == 4)
+       	{
+       	   System.out.println("Enter the No of Contacts to add");
+       	   count = Integer.parseInt(sc.nextLine());
+       	   for(int i=0; i<count;i++)
+       	   {
+  	          ab.addcont(Console_Input());
+           }
+           System.out.println("All contacts added succesfully");
+       	}
+
+       	else if(option == 5)
+       	{
+           System.out.println("Enter the First Name of the Contact to be displayed");
+           fname = sc.nextLine();
+           check = ab.check_if_contact_exists(fname);
+           if(check)
+           {
+               	ab.printcont(fname);
+           }
+
+           else
+           {
+           		System.out.println("No Contact Exists with that First Name");
+           }
+       	}
+
+       	else
+       	{
+       		break;
+       	}
+
+       }
+	   	 
 	}
+
+  public static Contact Console_Input()
+  {
+     Scanner sc = new Scanner(System.in);
+     System.out.println("Enter First Name");
+     String fname = sc.nextLine();
+     System.out.println("Enter Last Name");
+     String lname = sc.nextLine();
+     System.out.println("Enter Address");
+     String address = sc.nextLine();
+     System.out.println("Enter State");
+     String state = sc.nextLine();
+     System.out.println("Enter Zip");
+     long zip = Long.parseLong(sc.nextLine());
+     System.out.println("Enter Phone Number");
+     long phno = Long.parseLong(sc.nextLine());
+     System.out.println("Enter Email");
+     String email = sc.nextLine();
+
+     Contact c = new Contact(fname,lname,address,state,zip,phno,email);
+     return c;
+  } 
 }
