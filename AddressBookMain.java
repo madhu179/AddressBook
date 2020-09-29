@@ -21,8 +21,9 @@ public class AddressBookMain
         System.out.println("3. Edit a contact to a particular AddressBook");
        	System.out.println("4. Delete a Contact in a particular AddressBook");
        	System.out.println("5. Add Multiple Contacts to a particular AddressBook");
-       	System.out.println("6. Print Details of a AddressBook");
-       	System.out.println("7. Exit");
+        System.out.println("6. Search person based on state across all AddressBooks");
+       	System.out.println("7. Print Details of a AddressBook");
+       	System.out.println("8. Exit");
 
        	option = Integer.parseInt(sc.nextLine());
 
@@ -141,8 +142,32 @@ public class AddressBookMain
           }
        	   
        	}
+        else if(option == 6)
+        {
+          if(!AddressBookList.isEmpty())
+          {
+          System.out.println("Enter the name of the state");
+          state = sc.nextLine(); 
+          for(HashMap.Entry<String, AddressBook> entry : AddressBookList.entrySet()) {
+          AddressBook value = entry.getValue();
+          cl = value.getAddressBook();
+          System.out.println("The list of people in the state "+state+" :");
+          for(Contact cc : cl)
+          {
+               if(cc.getState().equals(state))
+               {
+                System.out.println(cc.getFirstName());
+               }
+          }
+        }
+      }
+      else
+      {
+        System.out.println("No AddressBooks are added yet.");
+      }
+      }
 
-       	else if(option == 6)
+       	else if(option == 7)
        	{
            System.out.println("Enter the name of the address book");
            bookName = sc.nextLine(); 
@@ -161,7 +186,7 @@ public class AddressBookMain
          }
        	}
 
-       	else if(option == 7)
+       	else if(option == 8)
        	{
        		break;
        	}
