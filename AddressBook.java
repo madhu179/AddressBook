@@ -3,8 +3,6 @@ public class AddressBook
 {
 	 ArrayList<Contact> contact ;
 
-
-
 	public AddressBook()
 	{
        contact = new ArrayList<Contact>();
