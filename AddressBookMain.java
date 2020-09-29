@@ -7,7 +7,9 @@ public class AddressBookMain
       HashMap<String, AddressBook> AddressBookList = new  HashMap<String, AddressBook>();
       AddressBook ab;
       ArrayList<Contact> cl;
+      HashMap<String, ArrayList<String>> statemap = new HashMap<String,ArrayList<String>>();
       Scanner sc = new Scanner(System.in);
+      ArrayList<String> al;
       int option,count;
       String fname,lname,address,state,email,bookName="";
       long zip,phno;
@@ -22,8 +24,9 @@ public class AddressBookMain
        	System.out.println("4. Delete a Contact in a particular AddressBook");
        	System.out.println("5. Add Multiple Contacts to a particular AddressBook");
         System.out.println("6. Search person based on state across all AddressBooks");
-       	System.out.println("7. Print Details of a AddressBook");
-       	System.out.println("8. Exit");
+        System.out.println("7. View person based on state across all AddressBooks");
+       	System.out.println("8. Print Details of a AddressBook");
+       	System.out.println("9. Exit");
 
        	option = Integer.parseInt(sc.nextLine());
 
@@ -47,6 +50,27 @@ public class AddressBookMain
             }
             else
             {
+            if(!statemap.isEmpty())
+            {
+              if(statemap.containsKey(c.getState()))
+              {
+              al = statemap.get(c.getState());
+              al.add(c.getFirstName());
+              statemap.replace(c.getState(),al);
+              }
+              else
+              {
+              ArrayList<String> ll = new ArrayList<String>();
+              ll.add(c.getFirstName());
+              statemap.put(c.getState(),ll);
+              }
+            }
+            else
+            {
+            ArrayList<String> ll = new ArrayList<String>();
+            ll.add(c.getFirstName());
+            statemap.put(c.getState(),ll);
+            }
             ab.addcont(c);
             System.out.println("Contact added succesfully to the AddressBook "+bookName);
             }
@@ -131,7 +155,28 @@ public class AddressBookMain
             }
             else
             {
-              ab.addcont(c);
+              if(!statemap.isEmpty())
+            {
+              if(statemap.containsKey(c.getState()))
+              {
+              al = statemap.get(c.getState());
+              al.add(c.getFirstName());
+              statemap.replace(c.getState(),al);
+              }
+              else
+              {
+              ArrayList<String> ll = new ArrayList<String>();
+              ll.add(c.getFirstName());
+              statemap.put(c.getState(),ll);
+              }
+            }
+            else
+            {
+            ArrayList<String> ll = new ArrayList<String>();
+            ll.add(c.getFirstName());
+            statemap.put(c.getState(),ll);
+            }
+            ab.addcont(c);
             }
            }
            System.out.println("All contacts added succesfully");
@@ -148,10 +193,10 @@ public class AddressBookMain
           {
           System.out.println("Enter the name of the state");
           state = sc.nextLine(); 
+          System.out.println("The list of people in the state "+state+" :");
           for(HashMap.Entry<String, AddressBook> entry : AddressBookList.entrySet()) {
           AddressBook value = entry.getValue();
-          cl = value.getAddressBook();
-          System.out.println("The list of people in the state "+state+" :");
+          cl = value.getAddressBook();  
           for(Contact cc : cl)
           {
                if(cc.getState().equals(state))
@@ -166,8 +211,30 @@ public class AddressBookMain
         System.out.println("No AddressBooks are added yet.");
       }
       }
+        else if(option == 7)
+        {
+          System.out.println("Enter the name of the state");
+          state = sc.nextLine(); 
+          if(!statemap.isEmpty())
+          {
+          for(HashMap.Entry<String, ArrayList<String>> entry : statemap.entrySet()) {
+            if(state.equals((String)entry.getKey()))
+            {              
+            ArrayList<String> value = entry.getValue();
+            for(String str : value)
+            {
+              System.out.println(str);
+            }
+            }
+        }
+      }
+          else
+          {
+           System.out.println("No person is from the given state");
+          }
+        }
 
-       	else if(option == 7)
+       	else if(option == 8)
        	{
            System.out.println("Enter the name of the address book");
            bookName = sc.nextLine(); 
@@ -186,7 +253,7 @@ public class AddressBookMain
          }
        	}
 
-       	else if(option == 8)
+       	else if(option == 9)
        	{
        		break;
        	}
