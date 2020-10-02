@@ -23,21 +23,13 @@ public class AddressBook
 		contact.add(c1);
 	}
 
-  public boolean check_if_contact_exists(String fname)
+   public boolean check_if_contact_exists(String fname)
   {
     if(!contact.isEmpty())
-    {
-    for(Contact s : contact)
-    {
-      if(fname.equals(s.getFirstName()))
-      {
-        return true;
-      }
-    }
-  }
-  return false;
-}
+       return contact.stream().anyMatch(p->p.getFirstName().equals((fname)));
 
+    return false;
+  }
 
 
 	public void editcont(Contact c)
