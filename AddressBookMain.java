@@ -28,8 +28,9 @@ public class AddressBookMain
         System.out.println("7. View person based on state across all AddressBooks");
         System.out.println("8. View No of contact persons from a state across all AddressBooks");
         System.out.println("9. Sort the entries in a particular address book by person name");
-        System.out.println("10. Print Details of a AddressBook");
-       	System.out.println("11. Exit");
+        System.out.println("10. Sort the entries in a particular address book by state");
+        System.out.println("11. Print Details of a AddressBook");
+       	System.out.println("12. Exit");
 
        	option = Integer.parseInt(sc.nextLine());
 
@@ -221,14 +222,10 @@ public class AddressBookMain
           final String st = state;
           if(!statemap.isEmpty())
           {             
-            List<String> value = statemap.entrySet().stream()
+             statemap.entrySet().stream()
                                       .filter(n->n.getKey().equals(st))
                                       .flatMap(n -> n.getValue().stream())
-                                      .collect(Collectors.toList());
-            for(String str : value)
-            {
-              System.out.println(str);
-            }
+                                      .forEach(n->System.out.println(n));
           }
           else
           {
@@ -275,9 +272,30 @@ public class AddressBookMain
           System.out.println("No AddressBook exists with the name "+bookName);
          }
         }
+
+        else if(option == 10)
+        {
+           System.out.println("Enter the name of the address book");
+           bookName = sc.nextLine(); 
+           if(AddressBookList.containsKey(bookName)){
+            addressBookObj = (AddressBook) AddressBookList.get(bookName); 
+            contanctList = addressBookObj.getAddressBook();                                  
+            ArrayList<Contact> sortedContactList = new ArrayList<Contact>(
+                                    contanctList.stream()
+                                    .sorted(Comparator.comparing(Contact::getState))
+                                    .collect(Collectors.toList())
+                                   );
+            addressBookObj.setAddressBook(sortedContactList);
+            System.out.println("The Contacts in the address book are sorted succesfully.");
+         }
+         else
+         {
+          System.out.println("No AddressBook exists with the name "+bookName);
+         }
+        }
          
 
-       	else if(option == 10)
+       	else if(option == 11)
        	{
            System.out.println("Enter the name of the address book");
            bookName = sc.nextLine(); 
@@ -296,7 +314,7 @@ public class AddressBookMain
          }
        	}
 
-       	else if(option == 11)
+       	else if(option == 12)
        	{
        		break;
        	}
