@@ -1,12 +1,13 @@
 import java.util.*;
+import java.util.stream.Collectors;
 public class AddressBookMain
 {
 
 	public static void main(String args[])
 	{  
       HashMap<String, AddressBook> AddressBookList = new  HashMap<String, AddressBook>();
-      AddressBook ab;
-      ArrayList<Contact> cl;
+      AddressBook addressBookObj;
+      ArrayList<Contact> contanctList;
       HashMap<String, ArrayList<String>> statemap = new HashMap<String,ArrayList<String>>();
       Scanner sc = new Scanner(System.in);
       ArrayList<String> al;
@@ -26,8 +27,9 @@ public class AddressBookMain
         System.out.println("6. Search person based on state across all AddressBooks");
         System.out.println("7. View person based on state across all AddressBooks");
         System.out.println("8. View No of contact persons from a state across all AddressBooks");
-       	System.out.println("9. Print Details of a AddressBook");
-       	System.out.println("10. Exit");
+        System.out.println("9. Sort the entries in a particular address book by person name");
+        System.out.println("10. Print Details of a AddressBook");
+       	System.out.println("11. Exit");
 
        	option = Integer.parseInt(sc.nextLine());
 
@@ -42,9 +44,9 @@ public class AddressBookMain
        	{
           bookName = get_book_name();
           if(AddressBookList.containsKey(bookName)){
-            ab = (AddressBook) AddressBookList.get(bookName);
+            addressBookObj = (AddressBook) AddressBookList.get(bookName);
             c = Console_Input();
-            check = ab.check_if_contact_exists(c.getFirstName());
+            check = addressBookObj.check_if_contact_exists(c.getFirstName());
             if(check)
             {
               System.out.println("A person already exists with the same FirstName,Duplicate entry not allowed!");
@@ -72,7 +74,7 @@ public class AddressBookMain
             ll.add(c.getFirstName());
             statemap.put(c.getState(),ll);
             }
-            ab.addcont(c);
+            addressBookObj.addcont(c);
             System.out.println("Contact added succesfully to the AddressBook "+bookName);
             }
           }
@@ -88,14 +90,14 @@ public class AddressBookMain
 
           bookName = get_book_name();
           if(AddressBookList.containsKey(bookName)){
-            ab = (AddressBook) AddressBookList.get(bookName);
+            addressBookObj = (AddressBook) AddressBookList.get(bookName);
             System.out.println("Enter the First Name of the Contact to be edited");
             fname = sc.nextLine();
-            check = ab.check_if_contact_exists(fname);
+            check = addressBookObj.check_if_contact_exists(fname);
             if(check)
            {
-             ab.editcont(Console_Input());
-             AddressBookList.replace(bookName,ab);
+             addressBookObj.editcont(Console_Input());
+             AddressBookList.replace(bookName,addressBookObj);
              System.out.println("Details Edited Succesfully");
            }
 
@@ -115,14 +117,14 @@ public class AddressBookMain
        	{
           bookName = get_book_name();
           if(AddressBookList.containsKey(bookName)){
-            ab = (AddressBook) AddressBookList.get(bookName);
+            addressBookObj = (AddressBook) AddressBookList.get(bookName);
             System.out.println("Enter the First Name of the Contact to be edited");
             fname = sc.nextLine();
-            check = ab.check_if_contact_exists(fname);
+            check = addressBookObj.check_if_contact_exists(fname);
             if(check)
            {
-             ab.delcont(fname);
-             AddressBookList.replace(bookName,ab);
+             addressBookObj.delcont(fname);
+             AddressBookList.replace(bookName,addressBookObj);
              System.out.println("Contact Deleted Succesfully");
            }
 
@@ -143,13 +145,13 @@ public class AddressBookMain
           bookName = get_book_name();
           if(AddressBookList.containsKey(bookName))
           {
-           ab = (AddressBook) AddressBookList.get(bookName);  
+           addressBookObj = (AddressBook) AddressBookList.get(bookName);  
            System.out.println("Enter the No of Contacts to add");
            count = Integer.parseInt(sc.nextLine());
            for(int i=0; i<count;i++)
            { 
             c = Console_Input();
-            check = ab.check_if_contact_exists(c.getFirstName());
+            check = addressBookObj.check_if_contact_exists(c.getFirstName());
             if(check)
             {
               System.out.println("A person already exists with the same FirstName,Duplicate entry not allowed!");
@@ -177,7 +179,7 @@ public class AddressBookMain
             ll.add(c.getFirstName());
             statemap.put(c.getState(),ll);
             }
-            ab.addcont(c);
+            addressBookObj.addcont(c);
             }
            }
            System.out.println("All contacts added succesfully");
@@ -197,8 +199,8 @@ public class AddressBookMain
           System.out.println("The list of people in the state "+state+" :");
           for(HashMap.Entry<String, AddressBook> entry : AddressBookList.entrySet()) {
           AddressBook value = entry.getValue();
-          cl = value.getAddressBook();  
-          for(Contact cc : cl)
+          contanctList = value.getAddressBook();  
+          for(Contact cc : contanctList)
           {
                if(cc.getState().equals(state))
                {
@@ -216,19 +218,18 @@ public class AddressBookMain
         {
           System.out.println("Enter the name of the state");
           state = sc.nextLine(); 
+          final String st = state;
           if(!statemap.isEmpty())
-          {
-          for(HashMap.Entry<String, ArrayList<String>> entry : statemap.entrySet()) {
-            if(state.equals((String)entry.getKey()))
-            {              
-            ArrayList<String> value = entry.getValue();
+          {             
+            List<String> value = statemap.entrySet().stream()
+                                      .filter(n->n.getKey().equals(st))
+                                      .flatMap(n -> n.getValue().stream())
+                                      .collect(Collectors.toList());
             for(String str : value)
             {
               System.out.println(str);
             }
-            }
-        }
-      }
+          }
           else
           {
            System.out.println("No person is from the given state");
@@ -238,34 +239,55 @@ public class AddressBookMain
         else if(option == 8)
         {
           System.out.println("Enter the name of the state");
-          state = sc.nextLine(); 
+          state = sc.nextLine();
+          final String st = state; 
           if(!statemap.isEmpty())
           {
-           for(HashMap.Entry<String, ArrayList<String>> entry : statemap.entrySet()) {
-            if(state.equals((String)entry.getKey()))
-            {     
-              System.out.println(entry.getValue().size());
-            } 
-          }
+            System.out.println(statemap.entrySet().stream()
+                                       .filter(n->n.getKey().equals(st))
+                                       .flatMap(n -> n.getValue().stream())
+                                       .count()+
+                                       " people are from the state "+state);
         }
         else
         {
           System.out.println("There are 0 persons form the given state");
         }
       }
+
+      else if(option == 9)
+        {
+           System.out.println("Enter the name of the address book");
+           bookName = sc.nextLine(); 
+           if(AddressBookList.containsKey(bookName)){
+            addressBookObj = (AddressBook) AddressBookList.get(bookName); 
+            contanctList = addressBookObj.getAddressBook();                                  
+            ArrayList<Contact> sortedContactList = new ArrayList<Contact>(
+                                    contanctList.stream()
+                                    .sorted(Comparator.comparing(Contact::getFirstName))
+                                    .collect(Collectors.toList())
+                                   );
+            addressBookObj.setAddressBook(sortedContactList);
+            System.out.println("The Contacts in the address book are sorted succesfully.");
+         }
+         else
+         {
+          System.out.println("No AddressBook exists with the name "+bookName);
+         }
+        }
          
 
-       	else if(option == 9)
+       	else if(option == 10)
        	{
            System.out.println("Enter the name of the address book");
            bookName = sc.nextLine(); 
            if(AddressBookList.containsKey(bookName)){
-            ab = (AddressBook) AddressBookList.get(bookName); 
-            cl = ab.getAddressBook();
+            addressBookObj = (AddressBook) AddressBookList.get(bookName); 
+            contanctList = addressBookObj.getAddressBook();
             System.out.println("The contacts in the address book "+bookName+" are :");
-            for(Contact cc : cl)
+            for(Contact cc : contanctList)
             {
-               ab.printcont(cc.getFirstName());
+               addressBookObj.printcont(cc.getFirstName());
             }
          }
          else
@@ -274,7 +296,7 @@ public class AddressBookMain
          }
        	}
 
-       	else if(option == 10)
+       	else if(option == 11)
        	{
        		break;
        	}
