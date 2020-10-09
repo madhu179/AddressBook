@@ -1,12 +1,12 @@
 import java.util.*;
 public class AddressBook
 {
-	 ArrayList<Contact> contact ;
+   ArrayList<Contact> contact ;
 
-	public AddressBook()
-	{
+  public AddressBook()
+  {
        contact = new ArrayList<Contact>();
-	}
+  }
 
   public void setAddressBook(ArrayList<Contact> contact)
   {
@@ -18,10 +18,10 @@ public class AddressBook
     return contact;
   }
 
-	public void addcont(Contact c1)
-	{
-		contact.add(c1);
-	}
+  public void addcont(Contact c1)
+  {
+    contact.add(c1);
+  }
 
    public boolean check_if_contact_exists(String fname)
   {
@@ -31,18 +31,17 @@ public class AddressBook
     return false;
   }
 
-
-	public void editcont(Contact c)
+  public void editcont(Contact c)
     {
-    	Iterator iter = contact.iterator();
-		  int i=0;
+      Iterator iter = contact.iterator();
+      int i=0;
       while (iter.hasNext()) {
         
-      	 Contact c1 = (Contact) iter.next();
+         Contact c1 = (Contact) iter.next();
          if(c.getFirstName().equals(c1.getFirstName()))
          {
-         	contact.set(i,c);    	
-         	break;
+          contact.set(i,c);     
+          break;
          }
          i+=1;
          
@@ -52,17 +51,17 @@ public class AddressBook
 
     public void delcont(String firstName)
     {
-    	Iterator iter = contact.iterator();
-		int i=0;
+      Iterator iter = contact.iterator();
+    int i=0;
       while (iter.hasNext()) {
         
-      	Contact c = (Contact) iter.next();
+        Contact c = (Contact) iter.next();
    
-      	
+        
          if(firstName.equals(c.getFirstName()))
          {
-         	contact.remove(i);
-         	break;
+          contact.remove(i);
+          break;
          }
          i+=1;
          
