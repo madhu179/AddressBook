@@ -1,92 +1,86 @@
-public class Contact
-{
-	
+public class Contact {
+
 	public String firstName;
 	public String lastName;
 	public String address;
-	public String State;
+	public String state;
 	public long zip;
 	public long phoneNumber;
 	public String email;
 
-	public Contact()
-	{
+	public Contact() {
 
 	}
 
-	public Contact(String firstName,String lastName,String address,String State,long zip,long phoneNumber,String email)
-	{
+	public Contact(String firstName, String lastName, String address, String state, long zip, long phoneNumber,
+			String email) {
 		this.firstName = firstName;
-		this.lastName= lastName;
-		this.address= address;
-		this.State = State;
+		this.lastName = lastName;
+		this.address = address;
+		this.state = state;
 		this.zip = zip;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 	}
 
-	public String getFirstName()
-	{
-        return firstName;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public String getLastName()
-	{
-        return lastName;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public String getAddress()
-	{
-        return address;
+	public String getAddress() {
+		return address;
 	}
 
-	public String getState()
-	{
-        return State;
-	}
-    public long getZip()
-	{
-        return zip;
-	}
-	public long getPhoneNumber()
-	{
-        return phoneNumber;
-	}
-	public String getEmail()
-	{
-        return email;
+	public String getState() {
+		return state;
 	}
 
-
-	public void setFirstName()
-	{
-        this.firstName = firstName;
+	public long getZip() {
+		return zip;
 	}
 
-	public void setLastName()
-	{
-        this.lastName=lastName;
+	public long getPhoneNumber() {
+		return phoneNumber;
 	}
 
-	public void setAddress()
-	{
-        this.address=address;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setState()
-	{
-        this.State=State;
+	public void setFirstName() {
+		this.firstName = firstName;
 	}
-    public void setZip()
-	{
-        this.zip=zip;
+
+	public void setLastName() {
+		this.lastName = lastName;
 	}
-	public void setPhoneNumber()
-	{
-        this.phoneNumber=phoneNumber;
+
+	public void setAddress() {
+		this.address = address;
 	}
-	public void setEmail()
-	{
-        this.email=email;
+
+	public void setState() {
+		this.state = state;
+	}
+
+	public void setZip() {
+		this.zip = zip;
+	}
+
+	public void setPhoneNumber() {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public void setEmail() {
+		this.email = email;
+	}
+
+	public String toString() {
+		return "FirstName=" + firstName + ", LastName=" + lastName + ", Address=" + address + ", State=" + state
+				+ ", zip=" + zip + ", phoneNumber=" + phoneNumber + ", email=" + email;
 	}
 }
