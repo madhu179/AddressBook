@@ -11,6 +11,7 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import com.csvjson.CSVUser;
 import com.google.gson.Gson;
 
 public class AddressBookMain {
@@ -102,22 +103,26 @@ public class AddressBookMain {
 
 	public static void processWriteRequest()
 			throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
-		System.out.println("Enter the type of file you want to write to : TXT , CSV");
+		System.out.println("Enter the type of file you want to write to : TXT , CSV, JSON");
 		String extension = sc.nextLine();
 		if (extension.equals("TXT"))
 			writeAddressBookToFile();
-		else
+		else if (extension.equals("CSV"))
 			writeAddressBookToCSVFile();
+		else
+			writeAddressBookToJSONFile();
 
 	}
 
 	public static void processReadRequest() throws IOException {
-		System.out.println("Enter the type of file you want to write to : TXT , CSV");
+		System.out.println("Enter the type of file you want to write to : TXT , CSV, JSON");
 		String extension = sc.nextLine();
 		if (extension.equals("TXT"))
 			readAddressBookFromFile();
-		else
+		else if (extension.equals("CSV"))
 			readAddressBookFromCSVFile();
+		else
+			readAddressBookFromJSONFile();
 
 	}
 
@@ -309,6 +314,55 @@ public class AddressBookMain {
 			System.out.println("No AddressBook exists with the name " + bookName);
 		}
 	}
+	
+	public static void writeAddressBookToJSONFile() throws IOException
+	{
+		Path pathVar = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER);
+		Path pathVarText = Paths
+				.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER + "\\JSONFiles");
+		if (Files.notExists(pathVar)) {
+			try {
+				Files.createDirectory(pathVarText);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (Files.notExists(pathVarText)) {
+			try {
+				Files.createDirectory(pathVarText);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println("Enter the name of the address book");
+		String bookName = sc.nextLine();
+		if (AddressBookList.containsKey(bookName)) {
+			addressBookObj = (AddressBook) AddressBookList.get(bookName);
+			contanctList = addressBookObj.getAddressBook();
+
+			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
+					+ "\\JSONFiles\\" + bookName + ".json");
+			if (Files.notExists(filePath)) {
+				try {
+					Files.createFile(filePath);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			 String stringFilePath = HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
+					+ "\\JSONFiles\\" + bookName + ".json";
+			
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(contanctList);
+			FileWriter writer = new FileWriter(stringFilePath);
+			writer.write(jsonString);
+			System.out.println("Details succesfully added to address book file");
+			writer.close();
+		}
+	}
 
 	public static void writeAddressBookToCSVFile()
 			throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
@@ -348,16 +402,17 @@ public class AddressBookMain {
 				}
 			}
 
-			final String FILE_PATH = HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
+			 String stringFilePath = HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
 					+ "\\CSVFiles\\" + bookName + ".csv";
 
-			FileWriter writer = new FileWriter(FILE_PATH);
+			FileWriter writer = new FileWriter(stringFilePath);
 
 			StatefulBeanToCsvBuilder<Contact> builder = new StatefulBeanToCsvBuilder(writer)
 					.withQuotechar(CSVWriter.NO_QUOTE_CHARACTER);
 			StatefulBeanToCsv beanWriter = builder.build();
 
 			beanWriter.write(contanctList);
+			System.out.println("Details succesfully added to address book file");
 
 			writer.close();
 		} else {
@@ -408,6 +463,41 @@ public class AddressBookMain {
 			System.out.println("No AddressBook exists with the name " + bookName);
 		}
 	}
+	
+	public static void readAddressBookFromJSONFile() throws IOException{
+		System.out.println("Enter the name of the address book");
+		String bookName = sc.nextLine();
+		if (AddressBookList.containsKey(bookName)) {
+			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
+					+ "\\JSONFiles\\" + bookName + ".json");
+			if (Files.exists(filePath)) {
+				
+				String stringFilePath = HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
+						+ "\\JSONFiles\\" + bookName + ".json";
+				
+				Gson gson = new Gson();
+				BufferedReader buffRead = new BufferedReader(new FileReader(stringFilePath));
+				Contact[] userObject = gson.fromJson(buffRead, Contact[].class);
+				List<Contact> contactData = Arrays.asList(userObject);
+				
+				for(Contact contact : contactData)
+				{
+					System.out.println("FirstName=" + contact.getFirstName() + ", LastName=" + contact.getLastName()
+					+ ", Address=" + contact.getAddress() + ", State=" + contact.getState() + ", zip="
+					+ contact.getZip() + ", phoneNumber=" + contact.getPhoneNumber() + ", email="
+					+ contact.getEmail());
+				}
+				
+			}
+			else {
+				System.out.println("No AddressBook exists with the name " + bookName);
+			}
+		}
+		else {
+			System.out.println("No AddressBook exists with the name " + bookName);
+		}
+		
+	}
 
 	public static void readAddressBookFromCSVFile() throws IOException {
 		System.out.println("Enter the name of the address book");
@@ -421,13 +511,14 @@ public class AddressBookMain {
 				CsvToBean<Contact> csvToBean = new CsvToBeanBuilder(reader).withType(Contact.class)
 						.withIgnoreLeadingWhiteSpace(true).build();
 
-				List<Contact> csvUsers = csvToBean.parse();
+				List<Contact> contactData = csvToBean.parse();
 
-				for (Contact csvUser : csvUsers) {
-					System.out.println("FirstName=" + csvUser.getFirstName() + ", LastName=" + csvUser.getLastName()
-							+ ", Address=" + csvUser.getAddress() + ", State=" + csvUser.getState() + ", zip="
-							+ csvUser.getZip() + ", phoneNumber=" + csvUser.getPhoneNumber() + ", email="
-							+ csvUser.getEmail());
+				for(Contact contact : contactData)
+				{
+					System.out.println("FirstName=" + contact.getFirstName() + ", LastName=" + contact.getLastName()
+					+ ", Address=" + contact.getAddress() + ", State=" + contact.getState() + ", zip="
+					+ contact.getZip() + ", phoneNumber=" + contact.getPhoneNumber() + ", email="
+					+ contact.getEmail());
 				}
 
 			} else {
