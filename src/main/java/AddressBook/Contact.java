@@ -1,13 +1,28 @@
 package AddressBook;
 
-public class Contact {
+import com.opencsv.bean.CsvBindByName;
 
+public class Contact {
+	
+	@CsvBindByName
 	public String firstName;
+	
+	@CsvBindByName
 	public String lastName;
+	
+	@CsvBindByName
 	public String address;
+	
+	@CsvBindByName
 	public String state;
+	
+	@CsvBindByName
 	public long zip;
+	
+	@CsvBindByName
 	public long phoneNumber;
+	
+	@CsvBindByName
 	public String email;
 
 	public Contact() {

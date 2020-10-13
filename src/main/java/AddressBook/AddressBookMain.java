@@ -4,6 +4,14 @@ import java.util.*;
 import java.util.stream.*;
 import java.nio.file.*;
 import java.io.*;
+import com.opencsv.*;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import com.google.gson.Gson;
 
 public class AddressBookMain {
 	private static Scanner sc = new Scanner(System.in);
@@ -20,7 +28,8 @@ public class AddressBookMain {
 	private static boolean check;
 	private static Contact c;
 
-	public static void main(String args[]) {
+	public static void main(String args[])
+			throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
 
 		do {
 			System.out.println("Choose one of the following : ");
@@ -73,10 +82,10 @@ public class AddressBookMain {
 				sortEntriesByState();
 				break;
 			case 11:
-				writeAddressBookToFile();
+				processWriteRequest();
 				break;
 			case 12:
-				readAddressBookFromFile();
+				processReadRequest();
 				break;
 			case 13:
 				printAddressBook();
@@ -88,6 +97,27 @@ public class AddressBookMain {
 			}
 
 		} while (option != 14);
+
+	}
+
+	public static void processWriteRequest()
+			throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
+		System.out.println("Enter the type of file you want to write to : TXT , CSV");
+		String extension = sc.nextLine();
+		if (extension.equals("TXT"))
+			writeAddressBookToFile();
+		else
+			writeAddressBookToCSVFile();
+
+	}
+
+	public static void processReadRequest() throws IOException {
+		System.out.println("Enter the type of file you want to write to : TXT , CSV");
+		String extension = sc.nextLine();
+		if (extension.equals("TXT"))
+			readAddressBookFromFile();
+		else
+			readAddressBookFromCSVFile();
 
 	}
 
@@ -280,11 +310,70 @@ public class AddressBookMain {
 		}
 	}
 
+	public static void writeAddressBookToCSVFile()
+			throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
+
+		Path pathVar = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER);
+		Path pathVarText = Paths
+				.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER + "\\CSVFiles");
+		if (Files.notExists(pathVar)) {
+			try {
+				Files.createDirectory(pathVarText);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (Files.notExists(pathVarText)) {
+			try {
+				Files.createDirectory(pathVarText);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		System.out.println("Enter the name of the address book");
+		String bookName = sc.nextLine();
+		if (AddressBookList.containsKey(bookName)) {
+			addressBookObj = (AddressBook) AddressBookList.get(bookName);
+			contanctList = addressBookObj.getAddressBook();
+
+			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
+					+ "\\CSVFiles\\" + bookName + ".csv");
+			if (Files.notExists(filePath)) {
+				try {
+					Files.createFile(filePath);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			final String FILE_PATH = HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
+					+ "\\CSVFiles\\" + bookName + ".csv";
+
+			FileWriter writer = new FileWriter(FILE_PATH);
+
+			StatefulBeanToCsvBuilder<Contact> builder = new StatefulBeanToCsvBuilder(writer)
+					.withQuotechar(CSVWriter.NO_QUOTE_CHARACTER);
+			StatefulBeanToCsv beanWriter = builder.build();
+
+			beanWriter.write(contanctList);
+
+			writer.close();
+		} else {
+			System.out.println("No AddressBook exists with the name " + bookName);
+		}
+
+	}
+
 	public static void writeAddressBookToFile() {
 		Path pathVar = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER);
+		Path pathVarText = Paths
+				.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER + "\\TextFiles");
 		if (Files.notExists(pathVar)) {
 			try {
 				Files.createDirectory(pathVar);
+				Files.createDirectory(pathVarText);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -298,7 +387,8 @@ public class AddressBookMain {
 			for (Contact cc : contanctList) {
 				data.append(cc.toString() + "\n");
 			}
-			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" +FOLDER + "\\" + bookName + ".txt");
+			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
+					+ "\\TextFiles\\" + bookName + ".txt");
 			if (Files.notExists(filePath)) {
 				try {
 					Files.createFile(filePath);
@@ -319,27 +409,62 @@ public class AddressBookMain {
 		}
 	}
 
+	public static void readAddressBookFromCSVFile() throws IOException {
+		System.out.println("Enter the name of the address book");
+		String bookName = sc.nextLine();
+		if (AddressBookList.containsKey(bookName)) {
+			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
+					+ "\\CSVFiles\\" + bookName + ".csv");
+			if (Files.exists(filePath)) {
+				Reader reader = Files.newBufferedReader(filePath);
+
+				CsvToBean<Contact> csvToBean = new CsvToBeanBuilder(reader).withType(Contact.class)
+						.withIgnoreLeadingWhiteSpace(true).build();
+
+				List<Contact> csvUsers = csvToBean.parse();
+
+				for (Contact csvUser : csvUsers) {
+					System.out.println("FirstName=" + csvUser.getFirstName() + ", LastName=" + csvUser.getLastName()
+							+ ", Address=" + csvUser.getAddress() + ", State=" + csvUser.getState() + ", zip="
+							+ csvUser.getZip() + ", phoneNumber=" + csvUser.getPhoneNumber() + ", email="
+							+ csvUser.getEmail());
+				}
+
+			} else {
+				System.out.println("No AddressBook exists with the name " + bookName);
+			}
+		}
+
+		else {
+			System.out.println("No AddressBook exists with the name " + bookName);
+		}
+	}
+
 	public static void readAddressBookFromFile() {
 		Path pathVar = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER);
 		System.out.println("Enter the name of the address book");
 		String bookName = sc.nextLine();
 		if (AddressBookList.containsKey(bookName)) {
 			List<String[]> listOfElements = null;
-			Path filePath = Paths.get(FOLDER + "/" + bookName + ".txt");
+			Path filePath = Paths.get(FOLDER + "\\TextFiles\\" + bookName + ".txt");
 			String[] data = new String[7];
 			int i = 0;
-			try {
-				Stream<String> stringStr = Files.lines(filePath);
-				listOfElements = stringStr.map(s -> s.split(", ")).collect(Collectors.toList());
-				System.out.println("The contacts in the address book are : ");
-				for (String[] e : listOfElements) {
-					for (String str : e) {
-						System.out.println(str);
+			if (Files.exists(filePath)) {
+				try {
+					Stream<String> stringStr = Files.lines(filePath);
+					listOfElements = stringStr.map(s -> s.split(", ")).collect(Collectors.toList());
+					System.out.println("The contacts in the address book are : ");
+					for (String[] e : listOfElements) {
+						for (String str : e) {
+							System.out.println(str);
+						}
+						System.out.println("");
 					}
-					System.out.println("");
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			} else {
+				System.out.println("No AddressBook exists with the name " + bookName);
 			}
 		}
 
