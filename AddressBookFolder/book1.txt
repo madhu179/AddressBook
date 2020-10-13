@@ -1,2 +1,1 @@
-FirstName=Tony, LastName=Stark, Address=Stark Tower NewYork, State=California, zip=23456, phoneNumber=98764323, email=TonyStark@Yahoo.com
-FirstName=Bruce, LastName=Wayne, Address=Wayne Building Gotham, State=Gotham, zip=7654, phoneNumber=45678, email=Bruce@gmail.com
+FirstName=Steve, LastName=Rogers, Address=NewYork, State=California, zip=3455, phoneNumber=7654345, email=steverogers@outlook.com

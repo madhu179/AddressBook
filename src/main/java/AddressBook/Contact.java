@@ -1,3 +1,5 @@
+package AddressBook;
+
 public class Contact {
 
 	public String firstName;
