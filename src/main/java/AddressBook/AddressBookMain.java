@@ -94,7 +94,7 @@ public class AddressBookMain {
 			case 14:
 				break;
 			default:
-				System.out.println("choose from the given options");
+				System.out.println("Choose from the given options");
 			}
 
 		} while (option != 14);
@@ -105,38 +105,40 @@ public class AddressBookMain {
 			throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
 		System.out.println("Enter the type of file you want to write to : TXT , CSV, JSON");
 		String extension = sc.nextLine();
+		AddressBookFileService fileService = new AddressBookFileService(AddressBookList);
 		if (extension.equals("TXT"))
-			writeAddressBookToFile();
+			fileService.writeAddressBookToFile();
 		else if (extension.equals("CSV"))
-			writeAddressBookToCSVFile();
+			fileService.writeAddressBookToCSVFile();
 		else
-			writeAddressBookToJSONFile();
+			fileService.writeAddressBookToJSONFile();
 
 	}
 
 	public static void processReadRequest() throws IOException {
 		System.out.println("Enter the type of file you want to write to : TXT , CSV, JSON");
 		String extension = sc.nextLine();
+		AddressBookFileService fileService = new AddressBookFileService(AddressBookList);
 		if (extension.equals("TXT"))
-			readAddressBookFromFile();
+			fileService.readAddressBookFromFile();
 		else if (extension.equals("CSV"))
-			readAddressBookFromCSVFile();
+			fileService.readAddressBookFromCSVFile();
 		else
-			readAddressBookFromJSONFile();
+			fileService.readAddressBookFromJSONFile();
 
 	}
 
 	public static void createAddressBook() {
-		bookName = get_book_name();
+		bookName = getAddressBookName();
 		AddressBookList.put(bookName, new AddressBook());
 		System.out.println("A new AddressBook with name " + bookName + " is created succesfully");
 	}
 
 	public static void addAContactToAddressBook() {
-		bookName = get_book_name();
+		bookName = getAddressBookName();
 		if (AddressBookList.containsKey(bookName)) {
 			addressBookObj = (AddressBook) AddressBookList.get(bookName);
-			c = Console_Input();
+			c = consoleInput();
 			check = addressBookObj.check_if_contact_exists(c.getFirstName());
 			if (check) {
 				System.out.println("A person already exists with the same FirstName,Duplicate entry not allowed!");
@@ -165,14 +167,14 @@ public class AddressBookMain {
 	}
 
 	public static void editAContactInAddressBook() {
-		bookName = get_book_name();
+		bookName = getAddressBookName();
 		if (AddressBookList.containsKey(bookName)) {
 			addressBookObj = (AddressBook) AddressBookList.get(bookName);
 			System.out.println("Enter the First Name of the Contact to be edited");
 			fname = sc.nextLine();
 			check = addressBookObj.check_if_contact_exists(fname);
 			if (check) {
-				addressBookObj.editcont(Console_Input());
+				addressBookObj.editcont(consoleInput());
 				AddressBookList.replace(bookName, addressBookObj);
 				System.out.println("Details Edited Succesfully");
 			}
@@ -186,7 +188,7 @@ public class AddressBookMain {
 	}
 
 	public static void deleteAContactInAddressBook() {
-		bookName = get_book_name();
+		bookName = getAddressBookName();
 		if (AddressBookList.containsKey(bookName)) {
 			addressBookObj = (AddressBook) AddressBookList.get(bookName);
 			System.out.println("Enter the First Name of the Contact to be edited");
@@ -207,13 +209,13 @@ public class AddressBookMain {
 	}
 
 	public static void addMultipleContactToAddressBook() {
-		bookName = get_book_name();
+		bookName = getAddressBookName();
 		if (AddressBookList.containsKey(bookName)) {
 			addressBookObj = (AddressBook) AddressBookList.get(bookName);
 			System.out.println("Enter the No of Contacts to add");
 			count = Integer.parseInt(sc.nextLine());
 			for (int i = 0; i < count; i++) {
-				c = Console_Input();
+				c = consoleInput();
 				check = addressBookObj.check_if_contact_exists(c.getFirstName());
 				if (check) {
 					System.out.println("A person already exists with the same FirstName,Duplicate entry not allowed!");
@@ -286,11 +288,7 @@ public class AddressBookMain {
 	}
 
 	public static void sortEntriesByName() {
-		System.out.println("Enter the name of the address book");
-		bookName = sc.nextLine();
-		if (AddressBookList.containsKey(bookName)) {
-			addressBookObj = (AddressBook) AddressBookList.get(bookName);
-			contanctList = addressBookObj.getAddressBook();
+		if(getContactList()!=null) {
 			ArrayList<Contact> sortedContactList = new ArrayList<Contact>(contanctList.stream()
 					.sorted(Comparator.comparing(Contact::getFirstName)).collect(Collectors.toList()));
 			addressBookObj.setAddressBook(sortedContactList);
@@ -301,11 +299,7 @@ public class AddressBookMain {
 	}
 
 	public static void sortEntriesByState() {
-		System.out.println("Enter the name of the address book");
-		bookName = sc.nextLine();
-		if (AddressBookList.containsKey(bookName)) {
-			addressBookObj = (AddressBook) AddressBookList.get(bookName);
-			contanctList = addressBookObj.getAddressBook();
+			if(getContactList()!=null) {
 			ArrayList<Contact> sortedContactList = new ArrayList<Contact>(
 					contanctList.stream().sorted(Comparator.comparing(Contact::getState)).collect(Collectors.toList()));
 			addressBookObj.setAddressBook(sortedContactList);
@@ -315,254 +309,7 @@ public class AddressBookMain {
 		}
 	}
 	
-	public static void writeAddressBookToJSONFile() throws IOException
-	{
-		Path pathVar = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER);
-		Path pathVarText = Paths
-				.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER + "\\JSONFiles");
-		if (Files.notExists(pathVar)) {
-			try {
-				Files.createDirectory(pathVarText);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (Files.notExists(pathVarText)) {
-			try {
-				Files.createDirectory(pathVarText);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		System.out.println("Enter the name of the address book");
-		String bookName = sc.nextLine();
-		if (AddressBookList.containsKey(bookName)) {
-			addressBookObj = (AddressBook) AddressBookList.get(bookName);
-			contanctList = addressBookObj.getAddressBook();
-
-			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
-					+ "\\JSONFiles\\" + bookName + ".json");
-			if (Files.notExists(filePath)) {
-				try {
-					Files.createFile(filePath);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-			 String stringFilePath = HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
-					+ "\\JSONFiles\\" + bookName + ".json";
-			
-			Gson gson = new Gson();
-			String jsonString = gson.toJson(contanctList);
-			FileWriter writer = new FileWriter(stringFilePath);
-			writer.write(jsonString);
-			System.out.println("Details succesfully added to address book file");
-			writer.close();
-		}
-	}
-
-	public static void writeAddressBookToCSVFile()
-			throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
-
-		Path pathVar = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER);
-		Path pathVarText = Paths
-				.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER + "\\CSVFiles");
-		if (Files.notExists(pathVar)) {
-			try {
-				Files.createDirectory(pathVarText);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (Files.notExists(pathVarText)) {
-			try {
-				Files.createDirectory(pathVarText);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		System.out.println("Enter the name of the address book");
-		String bookName = sc.nextLine();
-		if (AddressBookList.containsKey(bookName)) {
-			addressBookObj = (AddressBook) AddressBookList.get(bookName);
-			contanctList = addressBookObj.getAddressBook();
-
-			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
-					+ "\\CSVFiles\\" + bookName + ".csv");
-			if (Files.notExists(filePath)) {
-				try {
-					Files.createFile(filePath);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-			 String stringFilePath = HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
-					+ "\\CSVFiles\\" + bookName + ".csv";
-
-			FileWriter writer = new FileWriter(stringFilePath);
-
-			StatefulBeanToCsvBuilder<Contact> builder = new StatefulBeanToCsvBuilder(writer)
-					.withQuotechar(CSVWriter.NO_QUOTE_CHARACTER);
-			StatefulBeanToCsv beanWriter = builder.build();
-
-			beanWriter.write(contanctList);
-			System.out.println("Details succesfully added to address book file");
-
-			writer.close();
-		} else {
-			System.out.println("No AddressBook exists with the name " + bookName);
-		}
-
-	}
-
-	public static void writeAddressBookToFile() {
-		Path pathVar = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER);
-		Path pathVarText = Paths
-				.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER + "\\TextFiles");
-		if (Files.notExists(pathVar)) {
-			try {
-				Files.createDirectory(pathVar);
-				Files.createDirectory(pathVarText);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		System.out.println("Enter the name of the address book");
-		String bookName = sc.nextLine();
-		if (AddressBookList.containsKey(bookName)) {
-			addressBookObj = (AddressBook) AddressBookList.get(bookName);
-			contanctList = addressBookObj.getAddressBook();
-			StringBuffer data = new StringBuffer();
-			for (Contact cc : contanctList) {
-				data.append(cc.toString() + "\n");
-			}
-			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
-					+ "\\TextFiles\\" + bookName + ".txt");
-			if (Files.notExists(filePath)) {
-				try {
-					Files.createFile(filePath);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-			try {
-				Files.write(filePath, data.toString().getBytes());
-				System.out.println("Details succesfully added to address book file");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		} else {
-			System.out.println("No AddressBook exists with the name " + bookName);
-		}
-	}
 	
-	public static void readAddressBookFromJSONFile() throws IOException{
-		System.out.println("Enter the name of the address book");
-		String bookName = sc.nextLine();
-		if (AddressBookList.containsKey(bookName)) {
-			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
-					+ "\\JSONFiles\\" + bookName + ".json");
-			if (Files.exists(filePath)) {
-				
-				String stringFilePath = HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
-						+ "\\JSONFiles\\" + bookName + ".json";
-				
-				Gson gson = new Gson();
-				BufferedReader buffRead = new BufferedReader(new FileReader(stringFilePath));
-				Contact[] userObject = gson.fromJson(buffRead, Contact[].class);
-				List<Contact> contactData = Arrays.asList(userObject);
-				
-				for(Contact contact : contactData)
-				{
-					System.out.println("FirstName=" + contact.getFirstName() + ", LastName=" + contact.getLastName()
-					+ ", Address=" + contact.getAddress() + ", State=" + contact.getState() + ", zip="
-					+ contact.getZip() + ", phoneNumber=" + contact.getPhoneNumber() + ", email="
-					+ contact.getEmail());
-				}
-				
-			}
-			else {
-				System.out.println("No AddressBook exists with the name " + bookName);
-			}
-		}
-		else {
-			System.out.println("No AddressBook exists with the name " + bookName);
-		}
-		
-	}
-
-	public static void readAddressBookFromCSVFile() throws IOException {
-		System.out.println("Enter the name of the address book");
-		String bookName = sc.nextLine();
-		if (AddressBookList.containsKey(bookName)) {
-			Path filePath = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER
-					+ "\\CSVFiles\\" + bookName + ".csv");
-			if (Files.exists(filePath)) {
-				Reader reader = Files.newBufferedReader(filePath);
-
-				CsvToBean<Contact> csvToBean = new CsvToBeanBuilder(reader).withType(Contact.class)
-						.withIgnoreLeadingWhiteSpace(true).build();
-
-				List<Contact> contactData = csvToBean.parse();
-
-				for(Contact contact : contactData)
-				{
-					System.out.println("FirstName=" + contact.getFirstName() + ", LastName=" + contact.getLastName()
-					+ ", Address=" + contact.getAddress() + ", State=" + contact.getState() + ", zip="
-					+ contact.getZip() + ", phoneNumber=" + contact.getPhoneNumber() + ", email="
-					+ contact.getEmail());
-				}
-
-			} else {
-				System.out.println("No AddressBook exists with the name " + bookName);
-			}
-		}
-
-		else {
-			System.out.println("No AddressBook exists with the name " + bookName);
-		}
-	}
-
-	public static void readAddressBookFromFile() {
-		Path pathVar = Paths.get(HOME + "\\capg-training\\assignment2\\AddressBook\\AddressBook\\" + FOLDER);
-		System.out.println("Enter the name of the address book");
-		String bookName = sc.nextLine();
-		if (AddressBookList.containsKey(bookName)) {
-			List<String[]> listOfElements = null;
-			Path filePath = Paths.get(FOLDER + "\\TextFiles\\" + bookName + ".txt");
-			String[] data = new String[7];
-			int i = 0;
-			if (Files.exists(filePath)) {
-				try {
-					Stream<String> stringStr = Files.lines(filePath);
-					listOfElements = stringStr.map(s -> s.split(", ")).collect(Collectors.toList());
-					System.out.println("The contacts in the address book are : ");
-					for (String[] e : listOfElements) {
-						for (String str : e) {
-							System.out.println(str);
-						}
-						System.out.println("");
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} else {
-				System.out.println("No AddressBook exists with the name " + bookName);
-			}
-		}
-
-		else {
-			System.out.println("No AddressBook exists with the name " + bookName);
-		}
-	}
 
 	public static void printAddressBook() {
 		System.out.println("Enter the name of the address book");
@@ -578,15 +325,23 @@ public class AddressBookMain {
 			System.out.println("No AddressBook exists with the name " + bookName);
 		}
 	}
+	
+	private static List<Contact> getContactList() {
+		if (getAddressBookName() != null) {
+			addressBookObj = (AddressBook) AddressBookList.get(bookName);
+			contanctList = addressBookObj.getAddressBook();
+			return contanctList;
+		}
+		return null;
+	}
 
-	public static String get_book_name() {
-		Scanner sc = new Scanner(System.in);
+	public static String getAddressBookName() {
 		System.out.println("Enter the name of the address book");
-		String bookName = sc.nextLine();
+		 bookName = sc.nextLine();
 		return bookName;
 	}
 
-	public static Contact Console_Input() {
+	public static Contact consoleInput() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter First Name");
 		String fname = sc.nextLine();
