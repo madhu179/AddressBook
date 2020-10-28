@@ -24,7 +24,7 @@ public class AddressBookMain {
 	private static HashMap<String, ArrayList<String>> statemap = new HashMap<String, ArrayList<String>>();
 	private static ArrayList<String> al;
 	private static int option, count;
-	private static String fname, lname, address, state, email, bookName = "";
+	private static String fname, lname, address, city, state, email, bookName = "";
 	private static long zip, phno;
 	private static boolean check;
 	private static Contact c;
@@ -139,7 +139,7 @@ public class AddressBookMain {
 		if (AddressBookList.containsKey(bookName)) {
 			addressBookObj = (AddressBook) AddressBookList.get(bookName);
 			c = consoleInput();
-			check = addressBookObj.check_if_contact_exists(c.getFirstName());
+			check = addressBookObj.checkIfContactExists(c.getFirstName());
 			if (check) {
 				System.out.println("A person already exists with the same FirstName,Duplicate entry not allowed!");
 			} else {
@@ -158,7 +158,7 @@ public class AddressBookMain {
 					ll.add(c.getFirstName());
 					statemap.put(c.getState(), ll);
 				}
-				addressBookObj.addcont(c);
+				addressBookObj.addContact(c);
 				System.out.println("Contact added succesfully to the AddressBook " + bookName);
 			}
 		} else {
@@ -172,9 +172,9 @@ public class AddressBookMain {
 			addressBookObj = (AddressBook) AddressBookList.get(bookName);
 			System.out.println("Enter the First Name of the Contact to be edited");
 			fname = sc.nextLine();
-			check = addressBookObj.check_if_contact_exists(fname);
+			check = addressBookObj.checkIfContactExists(fname);
 			if (check) {
-				addressBookObj.editcont(consoleInput());
+				addressBookObj.editContact(consoleInput());
 				AddressBookList.replace(bookName, addressBookObj);
 				System.out.println("Details Edited Succesfully");
 			}
@@ -193,9 +193,9 @@ public class AddressBookMain {
 			addressBookObj = (AddressBook) AddressBookList.get(bookName);
 			System.out.println("Enter the First Name of the Contact to be edited");
 			fname = sc.nextLine();
-			check = addressBookObj.check_if_contact_exists(fname);
+			check = addressBookObj.checkIfContactExists(fname);
 			if (check) {
-				addressBookObj.delcont(fname);
+				addressBookObj.deleteContact(fname);
 				AddressBookList.replace(bookName, addressBookObj);
 				System.out.println("Contact Deleted Succesfully");
 			}
@@ -216,7 +216,7 @@ public class AddressBookMain {
 			count = Integer.parseInt(sc.nextLine());
 			for (int i = 0; i < count; i++) {
 				c = consoleInput();
-				check = addressBookObj.check_if_contact_exists(c.getFirstName());
+				check = addressBookObj.checkIfContactExists(c.getFirstName());
 				if (check) {
 					System.out.println("A person already exists with the same FirstName,Duplicate entry not allowed!");
 				} else {
@@ -235,7 +235,7 @@ public class AddressBookMain {
 						ll.add(c.getFirstName());
 						statemap.put(c.getState(), ll);
 					}
-					addressBookObj.addcont(c);
+					addressBookObj.addContact(c);
 				}
 			}
 			System.out.println("All contacts added succesfully");
@@ -319,7 +319,7 @@ public class AddressBookMain {
 			contanctList = addressBookObj.getAddressBook();
 			System.out.println("The contacts in the address book " + bookName + " are :");
 			for (Contact cc : contanctList) {
-				addressBookObj.printcont(cc.getFirstName());
+				addressBookObj.printContact(cc.getFirstName());
 			}
 		} else {
 			System.out.println("No AddressBook exists with the name " + bookName);
@@ -348,6 +348,8 @@ public class AddressBookMain {
 		System.out.println("Enter Last Name");
 		String lname = sc.nextLine();
 		System.out.println("Enter Address");
+		String city = sc.nextLine();
+		System.out.println("Enter City");
 		String address = sc.nextLine();
 		System.out.println("Enter State");
 		String state = sc.nextLine();
@@ -358,7 +360,7 @@ public class AddressBookMain {
 		System.out.println("Enter Email");
 		String email = sc.nextLine();
 
-		Contact c = new Contact(fname, lname, address, state, zip, phno, email);
+		Contact c = new Contact(fname, lname, address, city, state, zip, phno, email);
 		return c;
 	}
 }

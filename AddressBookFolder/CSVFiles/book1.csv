@@ -1,2 +1,2 @@
-address,email,firstName,lastName,phoneNumber,state,zip
-sdf,df,peter,parker,234,sdf,234
+address,city,email,firstName,lastName,phoneNumber,state,zip
+sdf,New York City,df,peter,parker,234,sdf,234

@@ -121,7 +121,7 @@ public class AddressBookFileService {
 
 				for (Contact contact : contactData) {
 					System.out.println("FirstName=" + contact.getFirstName() + ", LastName=" + contact.getLastName()
-							+ ", Address=" + contact.getAddress() + ", State=" + contact.getState() + ", zip="
+							+ ", Address=" + contact.getAddress() + ", City=" + contact.getCity() +", State=" + contact.getState() + ", zip="
 							+ contact.getZip() + ", phoneNumber=" + contact.getPhoneNumber() + ", email="
 							+ contact.getEmail());
 				}
@@ -149,7 +149,7 @@ public class AddressBookFileService {
 
 				for (Contact contact : contactData) {
 					System.out.println("FirstName=" + contact.getFirstName() + ", LastName=" + contact.getLastName()
-							+ ", Address=" + contact.getAddress() + ", State=" + contact.getState() + ", zip="
+							+ ", Address=" + contact.getAddress() + ", City=" + contact.getCity() + ", State=" + contact.getState() + ", zip="
 							+ contact.getZip() + ", phoneNumber=" + contact.getPhoneNumber() + ", email="
 							+ contact.getEmail());
 				}

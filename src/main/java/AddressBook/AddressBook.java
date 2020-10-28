@@ -17,18 +17,18 @@ public class AddressBook {
 		return contact;
 	}
 
-	public void addcont(Contact c1) {
+	public void addContact(Contact c1) {
 		contact.add(c1);
 	}
 
-	public boolean check_if_contact_exists(String fname) {
+	public boolean checkIfContactExists(String fname) {
 		if (!contact.isEmpty())
 			return contact.stream().anyMatch(p -> p.getFirstName().equals((fname)));
 
 		return false;
 	}
 
-	public void editcont(Contact c) {
+	public void editContact(Contact c) {
 		Iterator iter = contact.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
@@ -44,7 +44,7 @@ public class AddressBook {
 
 	}
 
-	public void delcont(String firstName) {
+	public void deleteContact(String firstName) {
 		Iterator iter = contact.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
@@ -61,13 +61,14 @@ public class AddressBook {
 
 	}
 
-	public void printcont(String firstName) {
+	public void printContact(String firstName) {
 
 		for (Contact s : contact) {
 			if (firstName.equals(s.getFirstName())) {
 				System.out.println("First Name : " + s.getFirstName());
 				System.out.println("Last Name : " + s.getLastName());
 				System.out.println("Address : " + s.getAddress());
+				System.out.println("City: " + s.getCity());
 				System.out.println("State: " + s.getState());
 				System.out.println("Zip : " + s.getZip());
 				System.out.println("Phone Number : " + s.getPhoneNumber());

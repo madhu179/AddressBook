@@ -14,6 +14,9 @@ public class Contact {
 	public String address;
 	
 	@CsvBindByName
+	public String city;
+	
+	@CsvBindByName
 	public String state;
 	
 	@CsvBindByName
@@ -29,11 +32,12 @@ public class Contact {
 
 	}
 
-	public Contact(String firstName, String lastName, String address, String state, long zip, long phoneNumber,
+	public Contact(String firstName, String lastName, String address, String city, String state, long zip, long phoneNumber,
 			String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
+		this.city = city;
 		this.state = state;
 		this.zip = zip;
 		this.phoneNumber = phoneNumber;
@@ -50,6 +54,10 @@ public class Contact {
 
 	public String getAddress() {
 		return address;
+	}
+	
+	public String getCity() {
+		return city;
 	}
 
 	public String getState() {
@@ -79,6 +87,10 @@ public class Contact {
 	public void setAddress() {
 		this.address = address;
 	}
+	
+	public void setCity(String city) {
+		this.city = city;
+	}
 
 	public void setState() {
 		this.state = state;
@@ -97,7 +109,7 @@ public class Contact {
 	}
 
 	public String toString() {
-		return "FirstName=" + firstName + ", LastName=" + lastName + ", Address=" + address + ", State=" + state
+		return "FirstName=" + firstName + ", LastName=" + lastName + ", Address=" + address+ ", City=" + city + ", State=" + state
 				+ ", zip=" + zip + ", phoneNumber=" + phoneNumber + ", email=" + email;
 	}
 }
