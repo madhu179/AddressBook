@@ -31,5 +31,13 @@ public class AddressBookTest {
 			boolean result = entries.size() == 3 ? true : false;
 			Assert.assertTrue(result);		
 	}
+	
+	@Test
+	public void readingFromDB_NoOfEntries_ByGivenCity_ShouldMatchActual() {
+		AddressBookDBService addressBookDBService = new AddressBookDBService();
+		int entries = addressBookDBService.getNoOfContactsByCity("New York City");
+			boolean result = entries == 2 ? true : false;
+			Assert.assertTrue(result);		
+	}
 
 }

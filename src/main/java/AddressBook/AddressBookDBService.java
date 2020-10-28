@@ -112,6 +112,24 @@ public class AddressBookDBService {
 			}	
 		return contactList;
 	}
+	
+	public int getNoOfContactsByCity(String city) {
+		int count=0;
+		String query = String.format("select * from contact where city = '%s'",city);
+		Statement statement;
+		ResultSet result = null;
+		try (Connection connection = this.getConnection();) {
+				statement = connection.createStatement();
+				result = statement.executeQuery(query);
+				while(result.next())
+				{
+					count += 1;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}	
+		return count;
+	}
 
 
 	private Connection getConnection() {
