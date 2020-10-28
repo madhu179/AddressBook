@@ -23,5 +23,13 @@ public class AddressBookTest {
 			boolean result = addressBookDBService.checkDBInSyncWithList("Steve");
 			Assert.assertTrue(result);	
 	}
+	
+	@Test
+	public void readingFromDB_NoOfEntries_InGivenDateRange_ShouldMatchActual() {
+		AddressBookDBService addressBookDBService = new AddressBookDBService();
+		List<Contact> entries = addressBookDBService.readDataInDateRange("2010-04-29","2018-04-29");
+			boolean result = entries.size() == 3 ? true : false;
+			Assert.assertTrue(result);		
+	}
 
 }

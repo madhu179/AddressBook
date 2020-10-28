@@ -97,6 +97,22 @@ public class AddressBookDBService {
 			}	
 		return contact;
 	}
+	
+	public List<Contact> readDataInDateRange(String startDate, String endDate) {
+		List<Contact> contactList = new ArrayList<Contact>();
+		String query = String.format("select * from contact join book_contact on contact.id = book_contact.contact_id join addressbook a on a.id = book_contact.book_id where date_added between cast('%s' as date) and cast('%s' as date)",startDate,endDate);
+		Statement statement;
+		ResultSet result = null;
+		try (Connection connection = this.getConnection();) {
+				statement = connection.createStatement();
+				result = statement.executeQuery(query);
+				contactList = getDatafromResultset(result);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}	
+		return contactList;
+	}
+
 
 	private Connection getConnection() {
 		String jdbcURL = "jdbc:mysql://localhost:3306/addressbook_service?useSSL=false";
@@ -111,6 +127,5 @@ public class AddressBookDBService {
 		
 		return connection;
 	}
-
 
 }
