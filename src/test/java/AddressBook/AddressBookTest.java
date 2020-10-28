@@ -14,5 +14,14 @@ public class AddressBookTest {
 			boolean result = entries.size() == 7 ? true : false;
 			Assert.assertTrue(result);		
 	}
+	
+	@Test
+	public void givenNewSalary_UpdatinginDB_UsingPreparedStatement_ShouldMatch() {
+		AddressBookDBService addressBookDBService = new AddressBookDBService();
+			List<Contact> entries = addressBookDBService.readData();
+			addressBookDBService.updateContactPhoneNumber("Steve", 99989796);
+			boolean result = addressBookDBService.checkDBInSyncWithList("Steve");
+			Assert.assertTrue(result);	
+	}
 
 }
