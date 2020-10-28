@@ -6,7 +6,7 @@ public class Contact {
 	
 	@CsvBindByName
 	public String firstName;
-	
+
 	@CsvBindByName
 	public String lastName;
 	
@@ -28,6 +28,10 @@ public class Contact {
 	@CsvBindByName
 	public String email;
 
+	public String bookName;
+	
+	public String bookType;
+
 	public Contact() {
 
 	}
@@ -42,6 +46,13 @@ public class Contact {
 		this.zip = zip;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
+	}
+	
+	public Contact(String firstName, String lastName, String address, String city, String state, long zip,
+			long phoneNumber, String email, String bookName, String bookType) {
+		this(firstName,lastName,address,city,state,zip,phoneNumber,email);
+		this.bookName = bookName;
+		this.bookType = bookType;
 	}
 
 	public String getFirstName() {
@@ -106,6 +117,22 @@ public class Contact {
 
 	public void setEmail() {
 		this.email = email;
+	}
+	
+	public String getBookName() {
+		return bookName;
+	}
+
+	public void setBookName(String bookName) {
+		this.bookName = bookName;
+	}
+
+	public String getBookType() {
+		return bookType;
+	}
+
+	public void setBookType(String bookType) {
+		this.bookType = bookType;
 	}
 
 	public String toString() {
