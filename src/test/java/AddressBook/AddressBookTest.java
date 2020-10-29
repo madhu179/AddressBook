@@ -11,7 +11,7 @@ public class AddressBookTest {
 	public void readingFromDB_NoOfEntries_ShouldMatchActual() {
 		AddressBookDBService addressBookDBService = new AddressBookDBService();
 		List<Contact> entries = addressBookDBService.readData();
-			boolean result = entries.size() == 7 ? true : false;
+			boolean result = entries.size() == 8 ? true : false;
 			Assert.assertTrue(result);		
 	}
 	
@@ -38,6 +38,15 @@ public class AddressBookTest {
 		int entries = addressBookDBService.getNoOfContactsByCity("New York City");
 			boolean result = entries == 2 ? true : false;
 			Assert.assertTrue(result);		
+	}
+	
+	@Test
+	public void givenNewEmployee_WhenAddedWithPayrollDataNewERDiagram_ShouldSyncWithDB(){
+		AddressBookDBService addressBookDBService = new AddressBookDBService();
+		addressBookDBService.readData();
+		List<Contact> entries = addressBookDBService.addNewContact("Peter","Parker","20 Ingram St.","New York City","New York",11375,32333435,"peterparker@gmail.com","2019-06-29","book1","family");
+			boolean result = entries.size() == 8 ? true : false;
+		Assert.assertTrue(true);	
 	}
 
 }
