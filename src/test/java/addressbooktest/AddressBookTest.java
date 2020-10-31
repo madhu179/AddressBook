@@ -1,10 +1,12 @@
 package addressbooktest;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import pojo.Contact;
+import models.Contact;
 import service.AddressBookService;
 
 public class AddressBookTest {
@@ -46,8 +48,23 @@ public class AddressBookTest {
 	public void givenNewEmployee_WhenAddedWithPayrollDataNewERDiagram_ShouldSyncWithDB() {
 		AddressBookService addressBookService = new AddressBookService();
 		List<Contact> entries = addressBookService.addNewContact("Peter", "Parker", "20 Ingram St.", "New York City",
-				"New York", 11375, 32333435, "peterparker@gmail.com", "2019-06-29", "book1", "family");
+				"New York", 11375, 32333435, "peterparker@gmail.com", LocalDate.parse("2019-06-29"), "book1", "family");
 		boolean result = entries.size() == 8 ? true : false;
+		Assert.assertTrue(result);
+	}
+	
+	@Test
+	public void givenMultipleEmployees_WhenAddedWithPayrollDataNewERDiagram_ShouldSyncWithDB() {
+		AddressBookService addressBookService = new AddressBookService();	
+		Contact[] contacts = {
+				new Contact("Peter", "Parker", "20 Ingram St.", "New York City",
+				"New York", 11375, 32333435, "peterparker@gmail.com", LocalDate.parse("2019-06-29"), "book1", "family"),
+				new Contact("Wade","Wilson","Vancouver, Canada","Vancouver","BritishColumbia",15342,54345434,"wadedeadpool@gmail.com",
+						LocalDate.parse("2016-02-12"),"book1","family")
+		};
+		List<Contact> entries = addressBookService.addMultipleContacts(Arrays.asList(contacts));
+		System.out.println(entries.size());
+		boolean result = entries.size() == 9 ? true : false;
 		Assert.assertTrue(result);
 	}
 

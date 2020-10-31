@@ -3,6 +3,7 @@ package service;
 import java.util.*;
 import java.util.stream.*;
 import java.nio.file.*;
+import java.time.LocalDate;
 import java.io.*;
 import com.opencsv.*;
 import com.opencsv.bean.CsvToBean;
@@ -14,8 +15,8 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import databaseservice.AddressBookDBService;
 import fileioservice.AddressBookFileService;
-import pojo.AddressBook;
-import pojo.Contact;
+import models.AddressBook;
+import models.Contact;
 
 import com.csvjson.CSVUser;
 import com.google.gson.Gson;
@@ -304,6 +305,7 @@ public class AddressBookService {
 						contact.getEmail(), contact.getBookName(), contact.getBookType()));
 				addressBookList.replace(key, contactList);
 			} else {
+				contactList = new AddressBook();
 				contactList.addContact(new Contact(contact.getFirstName(), contact.getLastName(), contact.getAddress(),
 						contact.getCity(), contact.getState(), contact.getZip(), contact.getPhoneNumber(),
 						contact.getEmail(), contact.getBookName(), contact.getBookType()));
@@ -311,6 +313,19 @@ public class AddressBookService {
 			}
 		}
 		return addressBookList;
+	}
+	
+	public List<Contact> convertMapToList(HashMap<String, AddressBook> addressBooksList){
+		List<Contact> contactList = new ArrayList<Contact>();
+		AddressBook adressbook;
+		for (Map.Entry mapElement : addressBooksList.entrySet()) {
+			adressbook =  (AddressBook) mapElement.getValue();
+			for(Contact c : adressbook.getAddressBook())
+			{
+				contactList.add(c);
+			}
+		}
+		return contactList;
 	}
 
 	public List<Contact> readData() {
@@ -360,12 +375,39 @@ public class AddressBookService {
 	}
 
 	public List<Contact> addNewContact(String firstName, String lastName, String address, String city, String state,
-			long zip, long phoneNumber, String email, String dateAdded, String bookName, String bookType) {
+			long zip, long phoneNumber, String email, LocalDate dateAdded, String bookName, String bookType) {
 		AddressBookDBService addressBookDBService = new AddressBookDBService();
 		List<Contact> contactDataList = addressBookDBService.addNewContact(firstName, lastName, address, city, state,
 				zip, phoneNumber, email, dateAdded, bookName, bookType);
 		addressBookList = convertListToMap(contactDataList);
 		System.out.println(addressBookList.size());
+		System.out.println(contactDataList.size());
 		return contactDataList;
+	}
+
+	public List<Contact> addMultipleContacts(List<Contact> contacts) {
+		HashMap<Integer, Boolean> additionStatus = new HashMap<Integer, Boolean>();
+		
+		contacts.forEach(c->{
+			additionStatus.put(c.hashCode(), false);
+			Runnable task = () -> {
+				System.out.println("Employee adding : " + Thread.currentThread().getName());
+					addNewContact(c.firstName, c.lastName, c.address, c.city, c.state,
+							c.zip, c.phoneNumber, c.email, c.dateAdded, c.bookName, c.bookType);			
+					System.out.println("Employee added : " + Thread.currentThread().getName());
+					additionStatus.put(c.hashCode(), true);
+			};
+			Thread thread = new Thread(task, c.firstName);
+			thread.start();
+		});
+
+		while (additionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return convertMapToList(addressBookList);
 	}
 }

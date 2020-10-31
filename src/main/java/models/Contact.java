@@ -1,4 +1,6 @@
-package pojo;
+package models;
+
+import java.time.LocalDate;
 
 import com.opencsv.bean.CsvBindByName;
 
@@ -6,7 +8,7 @@ public class Contact {
 	
 	@CsvBindByName
 	public String firstName;
-
+	
 	@CsvBindByName
 	public String lastName;
 	
@@ -31,6 +33,8 @@ public class Contact {
 	public String bookName;
 	
 	public String bookType;
+	
+	public LocalDate dateAdded;
 
 	public Contact() {
 
@@ -53,6 +57,14 @@ public class Contact {
 		this(firstName,lastName,address,city,state,zip,phoneNumber,email);
 		this.bookName = bookName;
 		this.bookType = bookType;
+	}
+	
+	public Contact(String firstName, String lastName, String address, String city, String state, long zip,
+			long phoneNumber, String email,LocalDate dateAdded,String bookName, String bookType) {
+		this(firstName,lastName,address,city,state,zip,phoneNumber,email);
+		this.bookName = bookName;
+		this.bookType = bookType;
+		this.dateAdded = dateAdded;
 	}
 
 	public String getFirstName() {
@@ -133,6 +145,14 @@ public class Contact {
 
 	public void setBookType(String bookType) {
 		this.bookType = bookType;
+	}
+	
+	public LocalDate getDateAdded() {
+		return dateAdded;
+	}
+
+	public void setDateAdded(LocalDate dateAdded) {
+		this.dateAdded = dateAdded;
 	}
 
 	public String toString() {

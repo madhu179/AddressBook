@@ -6,12 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import pojo.AddressBook;
-import pojo.Contact;
+import models.AddressBook;
+import models.Contact;
 
 public class AddressBookDBService {
 
@@ -140,7 +141,7 @@ public class AddressBookDBService {
 	}
 
 	public List<Contact> addNewContact(String firstName, String lastName, String address, String city, String state,
-			long zip, long phoneNumber, String email, String dateAdded, String bookName, String bookType) {
+			long zip, long phoneNumber, String email, LocalDate dateAdded, String bookName, String bookType) {
 		readData();
 		int contactId = 0;
 		String query = String.format(
@@ -154,13 +155,15 @@ public class AddressBookDBService {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		System.out.println(connection);
 		try (Statement statement = connection.createStatement();) {
-
+			System.out.println(firstName);
 			int rowAffected = statement.executeUpdate(query, statement.RETURN_GENERATED_KEYS);
+			System.out.println("rowAffected "+rowAffected);
 			if (rowAffected == 1) {
 				ResultSet result = statement.getGeneratedKeys();
-				if (result.next())
-					contactId = result.getInt(1);
+				if(result.next()) 
+					contactId = result.getInt(1);		
 			}
 		} catch (SQLException e) {
 			try {
