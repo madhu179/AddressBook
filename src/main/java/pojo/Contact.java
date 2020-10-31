@@ -1,4 +1,4 @@
-package AddressBook;
+package pojo;
 
 import com.opencsv.bean.CsvBindByName;
 

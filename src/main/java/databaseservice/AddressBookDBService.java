@@ -1,4 +1,4 @@
-package AddressBook;
+package databaseservice;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,12 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import pojo.AddressBook;
+import pojo.Contact;
 
 public class AddressBookDBService {
 
 	private PreparedStatement preparedStatement;
 	private List<Contact> contactDataList = new ArrayList<Contact>();
+	private HashMap<String, AddressBook> addressBookDataList = new HashMap<String, AddressBook>();
 
 	public List<Contact> readData() {
 		List<Contact> contactList = new ArrayList<Contact>();
@@ -45,17 +50,18 @@ public class AddressBookDBService {
 		return contactList;
 	}
 
-	public void updateContactPhoneNumber(String name, long phone) {
+	public List<Contact> updateContactPhoneNumber(String name, long phone) {
 		try (Connection connection = this.getConnection();) {
 			preparedStatement = connection.prepareStatement("update contact set phone = ? where firstName = ?");
 			preparedStatement.setLong(1, phone);
 			preparedStatement.setString(2, name);
 			int result = preparedStatement.executeUpdate();
 			if (result == 1)
-				updatePhoneNumberInList(name, phone);
+				return readData();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	public void updatePhoneNumberInList(String name, long phone) {
@@ -77,7 +83,7 @@ public class AddressBookDBService {
 		return contactDB.equals(contactInList);
 	}
 
-	private Contact getContact(String name) {
+	public Contact getContact(String name) {
 		Contact contact = null;
 		String query = String.format(
 				"select * from contact join book_contact on contact.id = book_contact.contact_id join addressbook a on a.id = book_contact.book_id where firstName = '%s'",
@@ -135,6 +141,7 @@ public class AddressBookDBService {
 
 	public List<Contact> addNewContact(String firstName, String lastName, String address, String city, String state,
 			long zip, long phoneNumber, String email, String dateAdded, String bookName, String bookType) {
+		readData();
 		int contactId = 0;
 		String query = String.format(
 				"insert into contact(firstName,lastName,address,city,state,zip,phone,email,date_added) "

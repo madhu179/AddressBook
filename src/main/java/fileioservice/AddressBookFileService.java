@@ -1,4 +1,4 @@
-package AddressBook;
+package fileioservice;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -24,6 +24,9 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+
+import pojo.AddressBook;
+import pojo.Contact;
 
 public class AddressBookFileService {
 	private static final String HOME = System.getProperty("user.home");

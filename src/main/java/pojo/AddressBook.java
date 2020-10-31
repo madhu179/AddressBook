@@ -1,9 +1,9 @@
-package AddressBook;
+package pojo;
 
 import java.util.*;
 
 public class AddressBook {
-	ArrayList<Contact> contact;
+	List<Contact> contact;
 
 	public AddressBook() {
 		contact = new ArrayList<Contact>();
@@ -14,7 +14,7 @@ public class AddressBook {
 	}
 
 	public ArrayList<Contact> getAddressBook() {
-		return contact;
+		return (ArrayList<Contact>) contact;
 	}
 
 	public void addContact(Contact c1) {
@@ -24,7 +24,6 @@ public class AddressBook {
 	public boolean checkIfContactExists(String fname) {
 		if (!contact.isEmpty())
 			return contact.stream().anyMatch(p -> p.getFirstName().equals((fname)));
-
 		return false;
 	}
 
@@ -32,14 +31,12 @@ public class AddressBook {
 		Iterator iter = contact.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
-
 			Contact c1 = (Contact) iter.next();
 			if (c.getFirstName().equals(c1.getFirstName())) {
 				contact.set(i, c);
 				break;
 			}
 			i += 1;
-
 		}
 
 	}
@@ -48,15 +45,12 @@ public class AddressBook {
 		Iterator iter = contact.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
-
 			Contact c = (Contact) iter.next();
-
 			if (firstName.equals(c.getFirstName())) {
 				contact.remove(i);
 				break;
 			}
 			i += 1;
-
 		}
 
 	}
