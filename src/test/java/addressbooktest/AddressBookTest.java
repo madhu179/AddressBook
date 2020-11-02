@@ -1,5 +1,7 @@
 package addressbooktest;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +56,7 @@ public class AddressBookTest {
 	}
 	
 	@Test
-	public void givenMultipleEmployees_WhenAddedWithPayrollDataNewERDiagram_ShouldSyncWithDB() {
+	public void givenMultipleContacts_WhenAddedToAddressbookDB_ShouldBeInSync() {
 		AddressBookService addressBookService = new AddressBookService();	
 		Contact[] contacts = {
 				new Contact("Peter", "Parker", "20 Ingram St.", "New York City",
@@ -62,7 +64,10 @@ public class AddressBookTest {
 				new Contact("Wade","Wilson","Vancouver, Canada","Vancouver","BritishColumbia",15342,54345434,"wadedeadpool@gmail.com",
 						LocalDate.parse("2016-02-12"),"book1","family")
 		};
+		Instant start = Instant.now();
 		List<Contact> entries = addressBookService.addMultipleContacts(Arrays.asList(contacts));
+		Instant end = Instant.now();
+		System.out.println("Duration with Thread : " + Duration.between(start, end));
 		System.out.println(entries.size());
 		boolean result = entries.size() == 9 ? true : false;
 		Assert.assertTrue(result);

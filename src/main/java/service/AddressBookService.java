@@ -365,7 +365,6 @@ public class AddressBookService {
 		AddressBookDBService addressBookDBService = new AddressBookDBService();
 		List<Contact> contactDataList = addressBookDBService.readDataInDateRange(startDate, endDate);
 		addressBookList = convertListToMap(contactDataList);
-		System.out.println(addressBookList.size());
 		return contactDataList;
 	}
 
@@ -377,11 +376,11 @@ public class AddressBookService {
 	public List<Contact> addNewContact(String firstName, String lastName, String address, String city, String state,
 			long zip, long phoneNumber, String email, LocalDate dateAdded, String bookName, String bookType) {
 		AddressBookDBService addressBookDBService = new AddressBookDBService();
-		List<Contact> contactDataList = addressBookDBService.addNewContact(firstName, lastName, address, city, state,
-				zip, phoneNumber, email, dateAdded, bookName, bookType);
-		addressBookList = convertListToMap(contactDataList);
-		System.out.println(addressBookList.size());
-		System.out.println(contactDataList.size());
+		List<Contact> contactDataList = new ArrayList<Contact>();
+			addressBookDBService.addNewContact(firstName, lastName, address, city, state,
+				zip, phoneNumber, email, dateAdded, bookName, bookType);	
+			contactDataList = addressBookDBService.readData();
+			addressBookList = convertListToMap(contactDataList);
 		return contactDataList;
 	}
 
