@@ -1,0 +1,132 @@
+{
+  "book1_family": [
+    {
+      "id": 1,
+      "firstName": "Peter",
+      "lastName": "Parker",
+      "address": "20 Ingram St.",
+      "city": "New York City",
+      "state": "New York",
+      "zip": 11375,
+      "phoneNumber": 32333435,
+      "email": "peterparker@gmail.com",
+      "bookName": "book1",
+      "bookType": "family",
+      "dateAdded": {
+        "year": 2019,
+        "month": 6,
+        "day": 29
+      }
+    },
+    {
+      "id": 2,
+      "firstName": "Wade",
+      "lastName": "Wilson",
+      "address": "Vancouver, Canada",
+      "city": "Vancouver",
+      "state": "BritishColumbia",
+      "zip": 15342,
+      "phoneNumber": 54345434,
+      "email": "wadedeadpool@gmail.com",
+      "bookName": "book1",
+      "bookType": "family",
+      "dateAdded": {
+        "year": 2016,
+        "month": 2,
+        "day": 12
+      }
+    },
+    {
+      "firstName": "Harry",
+      "lastName": "Osborn",
+      "address": "20 Ingram St.",
+      "city": "New York City",
+      "state": "New York",
+      "zip": 11375,
+      "phoneNumber": 32333435,
+      "email": "peterparker@gmail.com",
+      "bookName": "book1",
+      "bookType": "family",
+      "dateAdded": {
+        "year": 2019,
+        "month": 6,
+        "day": 29
+      },
+      "id": 3
+    },
+    {
+      "firstName": "Miles",
+      "lastName": "Morales",
+      "address": "Vancouver, Canada",
+      "city": "Vancouver",
+      "state": "BritishColumbia",
+      "zip": 15342,
+      "phoneNumber": 54345434,
+      "email": "wadedeadpool@gmail.com",
+      "bookName": "book1",
+      "bookType": "family",
+      "dateAdded": {
+        "year": 2016,
+        "month": 2,
+        "day": 12
+      },
+      "id": 4
+    }
+  ],
+  "book2_family": [
+    {
+      "id": 1,
+      "firstName": "Steve",
+      "lastName": "Rogers",
+      "address": "20 Ingram St.",
+      "city": "New York City",
+      "state": "New York",
+      "zip": 11375,
+      "phoneNumber": 32333435,
+      "email": "peterparker@gmail.com",
+      "bookName": "book1",
+      "bookType": "family",
+      "dateAdded": {
+        "year": 2019,
+        "month": 6,
+        "day": 29
+      }
+    },
+    {
+      "firstName": "Peter",
+      "lastName": "Parker",
+      "address": "20 Ingram St.",
+      "city": "New York City",
+      "state": "New York",
+      "zip": 11375,
+      "phoneNumber": 32333435,
+      "email": "peterparker@gmail.com",
+      "bookName": "book1",
+      "bookType": "family",
+      "dateAdded": {
+        "year": 2019,
+        "month": 6,
+        "day": 29
+      },
+      "id": 2
+    },
+    {
+      "firstName": "Wade",
+      "lastName": "Wilson",
+      "address": "Vancouver, Canada",
+      "city": "Vancouver",
+      "state": "BritishColumbia",
+      "zip": 15342,
+      "phoneNumber": 54345434,
+      "email": "wadedeadpool@gmail.com",
+      "bookName": "book1",
+      "bookType": "family",
+      "dateAdded": {
+        "year": 2016,
+        "month": 2,
+        "day": 12
+      },
+      "id": 3
+    }
+  ]
+}

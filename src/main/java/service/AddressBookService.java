@@ -33,6 +33,10 @@ public class AddressBookService {
 	private static boolean check;
 	private static Contact c;
 
+	public void setAddressBookList(HashMap<String, AddressBook> addressBookList) {
+		this.addressBookList = addressBookList;
+	}
+
 	public void processWriteRequest() throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
 		System.out.println("Enter the type of file you want to write to : TXT , CSV, JSON");
 		String extension = sc.nextLine();
@@ -297,7 +301,7 @@ public class AddressBookService {
 		AddressBook contactList = new AddressBook();
 		HashMap<String, AddressBook> addressBookList = new HashMap<String, AddressBook>();
 		for (Contact contact : contacts) {
-			String key = contact.getBookName() + "," + contact.getBookType();
+			String key = contact.getBookName() + "_" + contact.getBookType();
 			if (addressBookList.containsKey(key)) {
 				contactList = addressBookList.get(key);
 				contactList.addContact(new Contact(contact.getFirstName(), contact.getLastName(), contact.getAddress(),
@@ -314,14 +318,13 @@ public class AddressBookService {
 		}
 		return addressBookList;
 	}
-	
-	public List<Contact> convertMapToList(HashMap<String, AddressBook> addressBooksList){
+
+	public List<Contact> convertMapToList(HashMap<String, AddressBook> addressBooksList) {
 		List<Contact> contactList = new ArrayList<Contact>();
 		AddressBook adressbook;
 		for (Map.Entry mapElement : addressBooksList.entrySet()) {
-			adressbook =  (AddressBook) mapElement.getValue();
-			for(Contact c : adressbook.getAddressBook())
-			{
+			adressbook = (AddressBook) mapElement.getValue();
+			for (Contact c : adressbook.getAddressBook()) {
 				contactList.add(c);
 			}
 		}
@@ -377,24 +380,24 @@ public class AddressBookService {
 			long zip, long phoneNumber, String email, LocalDate dateAdded, String bookName, String bookType) {
 		AddressBookDBService addressBookDBService = new AddressBookDBService();
 		List<Contact> contactDataList = new ArrayList<Contact>();
-			addressBookDBService.addNewContact(firstName, lastName, address, city, state,
-				zip, phoneNumber, email, dateAdded, bookName, bookType);	
-			contactDataList = addressBookDBService.readData();
-			addressBookList = convertListToMap(contactDataList);
+		addressBookDBService.addNewContact(firstName, lastName, address, city, state, zip, phoneNumber, email,
+				dateAdded, bookName, bookType);
+		contactDataList = addressBookDBService.readData();
+		addressBookList = convertListToMap(contactDataList);
 		return contactDataList;
 	}
 
 	public List<Contact> addMultipleContacts(List<Contact> contacts) {
 		HashMap<Integer, Boolean> additionStatus = new HashMap<Integer, Boolean>();
-		
-		contacts.forEach(c->{
+
+		contacts.forEach(c -> {
 			additionStatus.put(c.hashCode(), false);
 			Runnable task = () -> {
 				System.out.println("Employee adding : " + Thread.currentThread().getName());
-					addNewContact(c.firstName, c.lastName, c.address, c.city, c.state,
-							c.zip, c.phoneNumber, c.email, c.dateAdded, c.bookName, c.bookType);			
-					System.out.println("Employee added : " + Thread.currentThread().getName());
-					additionStatus.put(c.hashCode(), true);
+				addNewContact(c.firstName, c.lastName, c.address, c.city, c.state, c.zip, c.phoneNumber, c.email,
+						c.dateAdded, c.bookName, c.bookType);
+				System.out.println("Employee added : " + Thread.currentThread().getName());
+				additionStatus.put(c.hashCode(), true);
 			};
 			Thread thread = new Thread(task, c.firstName);
 			thread.start();
@@ -409,4 +412,48 @@ public class AddressBookService {
 		}
 		return convertMapToList(addressBookList);
 	}
+
+	public void addAContactToAddressBookList(Contact contact, String bookName, String bookType) {
+		String key = bookName + "_" + bookType;
+		AddressBook addressbook = new AddressBook();
+		if (!addressBookList.containsKey(key)) {
+			addressbook.setAddressBook(new ArrayList<Contact>(Arrays.asList(contact)));
+			addressBookList.put(key, addressbook);
+		} else {
+			addressbook = addressBookList.get(key);
+			addressbook.addContact(contact);
+			addressBookList.replace(key, addressbook);
+		}
+	}
+
+	public int getContactsCount() {
+		int i[] = { 0 };
+		addressBookList.forEach((k, v) -> {
+			i[0] = i[0] + v.getAddressBook().size();
+		});
+		return i[0];
+	}
+	
+	public void printAddressBookList()
+	{
+		addressBookList.forEach((k, v) -> {
+			System.out.println(k);
+			for(Contact c : v.getAddressBook())
+			{
+				System.out.println(c.firstName);
+			}
+		});
+	}
+
+	public HashMap<String, AddressBook> convertContactListToAddressBookInMap(
+			HashMap<String, List<Contact>> addressBooks) {
+		HashMap<String, AddressBook> addressBookList = new HashMap<String, AddressBook>();
+		addressBooks.forEach((k, v) -> {
+			AddressBook addressbook = new AddressBook();
+			addressbook.setAddressBook((ArrayList<Contact>) v);
+			addressBookList.put(k, addressbook);
+		});
+		return addressBookList;
+	}
+
 }

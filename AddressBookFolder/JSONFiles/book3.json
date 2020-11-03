@@ -1,1 +1,15 @@
-[{"firstName":"Steven","lastName":"Strange","address":"strange tower NewYork","city":"New York City","state":"California","zip":365,"phoneNumber":234543,"email":"steven.strange@yahoo.com"}]
+{
+  "contacts":
+  [
+  	{
+  		"firstName":"Steven",
+  		"lastName":"Strange",
+  "address":"strange tower NewYork",
+"city":"New York City",
+"state":"California",
+"zip":365,
+"phoneNumber":234543,
+"email":"steven.strange@yahoo.com"
+}
+  ]
+}
