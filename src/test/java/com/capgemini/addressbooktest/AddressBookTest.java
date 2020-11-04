@@ -115,6 +115,27 @@ public class AddressBookTest {
 		}
 		return addressBookList;
 	}
+	
+	public int getIdFromJsonServer(String book, String firstName) {
+		Response response = RestAssured.get("/" + book);
+		String jsonString = response.asString();
+		JSONArray jsonArray = new JSONArray(jsonString);
+		JSONObject jsonObject;
+		int count = 0;
+		for (int i = 0; i < jsonArray.length(); i++) {
+			jsonObject = jsonArray.getJSONObject(i);
+			Iterator<String> it = jsonObject.keys();
+			count = count + 1;
+			while (it.hasNext()) {
+				String key = it.next();
+				Object value = jsonObject.get(key);
+				if (value.equals(firstName)) {
+					return count;
+				}
+			}
+		}
+		return 0;
+	}
 
 	public Response addContactToJsonServer(String resource, Contact contact) {
 		String jsonString = new Gson().toJson(contact);
@@ -123,6 +144,16 @@ public class AddressBookTest {
 		request.header("Content-Type", "application/json");
 		request.body(jsonString);
 		return request.post("/" + resource);
+	}
+	
+	public Response updateContactInJsonServer(String resource,Contact contact,int id)
+	{
+		String jsonString = new Gson().toJson(contact);
+		RequestSpecification request = RestAssured.given().config(RestAssuredConfig.config()
+				.connectionConfig(ConnectionConfig.connectionConfig().closeIdleConnectionsAfterEachResponse()));
+		request.header("Content-Type", "application/json");
+		request.body(jsonString);
+		return request.put("/" + resource+"/"+id);
 	}
 	
 
@@ -178,6 +209,24 @@ public class AddressBookTest {
 		}
 		int CountOfContacts = addressbookService.getContactsCount();
 		Assert.assertEquals(9, CountOfContacts);
+	}
+	
+	@Test
+	public void givenUpdatedContact_WriteToJsonServer_ShouldBeInSync()
+	{
+		AddressBookService addressbookService = new AddressBookService();
+		HashMap<String, List<Contact>> addressBooks = getContactList();
+		HashMap<String, AddressBook> addressBookList = addressbookService
+				.convertContactListToAddressBookInMap(addressBooks);
+		addressbookService.setAddressBookList(addressBookList);
+		Contact contact = new Contact("Miles", "Morales", "Morales Residency,New York", "New York City", "New York", 12345,
+				98734232, "milesmorales@gmail.com", LocalDate.parse("2018-12-14"), "book1", "family");
+		String resource = contact.bookName + "_" + contact.bookType;
+		Response response = updateContactInJsonServer(resource,contact,getIdFromJsonServer(resource, contact.firstName));
+		Assert.assertEquals(200, response.getStatusCode());
+		addressbookService.updateContact(contact);
+		boolean result = addressbookService.checkIfJsonInSyncWithList(contact);
+		Assert.assertTrue(result);
 	}
 		
 

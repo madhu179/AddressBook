@@ -445,6 +445,35 @@ public class AddressBookService {
 		});
 		return addressBookList;
 	}
+	
+	public boolean updateContact(Contact contact) {
+		String key = contact.bookName + "_" + contact.bookType;
+		AddressBook addressbook = new AddressBook();
+		if (!addressBookList.containsKey(key)) {
+			return false;
+		} else {
+			addressbook = addressBookList.get(key);
+			addressbook.editContact(contact);
+			addressBookList.replace(key, addressbook);
+		}
+		return true;
+		
+	}
+	
+	public boolean checkIfJsonInSyncWithList(Contact contact)
+	{
+		String key = contact.bookName + "_" + contact.bookType;
+		List<Contact> contactList;
+		if (addressBookList.containsKey(key)) {
+			contactList = addressBookList.get(key).getAddressBook();
+			for(Contact c : contactList)
+			{
+				if(c.equals(contact))
+					return true;
+			}
+		} 
+		return false;
+	}
 
 
 }
