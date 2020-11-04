@@ -124,27 +124,7 @@ public class AddressBookTest {
 		request.body(jsonString);
 		return request.post("/" + resource);
 	}
-
-	public int getIdFromJsonServer(String book, String firstName) {
-		Response response = RestAssured.get("/" + book);
-		String jsonString = response.asString();
-		JSONArray jsonArray = new JSONArray(jsonString);
-		JSONObject jsonObject;
-		int count = 0;
-		for (int i = 0; i < jsonArray.length(); i++) {
-			jsonObject = jsonArray.getJSONObject(i);
-			Iterator<String> it = jsonObject.keys();
-			count = count + 1;
-			while (it.hasNext()) {
-				String key = it.next();
-				Object value = jsonObject.get(key);
-				if (value.equals(firstName)) {
-					return count;
-				}
-			}
-		}
-		return 0;
-	}
+	
 
 	@Test
 	public void retreiveContacts_FromJsonServer_ShouldMatchCount() {
@@ -174,11 +154,31 @@ public class AddressBookTest {
 		int CountOfContacts = addressbookService.getContactsCount();
 		Assert.assertEquals(7, CountOfContacts);
 	}
-
+	
 	@Test
-	public void printId() {
-		int id = getIdFromJsonServer("book1_family", "Harry");
-		System.out.println(id);
+	public void givenMultipleContacts_WriteToJsonServer_ShouldReturnSuccessCode()
+	{
+		AddressBookService addressbookService = new AddressBookService();
+		HashMap<String, List<Contact>> addressBooks = getContactList();
+		HashMap<String, AddressBook> addressBookList = addressbookService
+				.convertContactListToAddressBookInMap(addressBooks);
+		addressbookService.setAddressBookList(addressBookList);
+		String resource;
+		Contact contacts[] = {new Contact("Thor", "Odinson", "Asgard,Yotenheim", "Asgard", "Yotenheim", 87654,
+				45231232, "thorodinson@yahoo.com", LocalDate.parse("2011-04-29"), "book2", "family"),
+				new Contact("Loki", "Odinson", "Asgard,Yotenheim", "Asgard", "Yotenheim", 87654,
+						54289032, "lokiodinson@yahoo.com", LocalDate.parse("2011-04-29"), "book2", "family")
+		};
+		for(Contact contact : contacts )
+		{
+		resource = contact.bookName + "_" + contact.bookType;
+		Response response = addContactToJsonServer(resource, contact);
+		Assert.assertEquals(201, response.getStatusCode());
+		addressbookService.addAContactToAddressBookList(contact, contact.bookName, contact.bookType);
+		}
+		int CountOfContacts = addressbookService.getContactsCount();
+		Assert.assertEquals(9, CountOfContacts);
 	}
+		
 
 }

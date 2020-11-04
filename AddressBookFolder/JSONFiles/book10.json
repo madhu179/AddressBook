@@ -57,18 +57,18 @@
     {
       "firstName": "Miles",
       "lastName": "Morales",
-      "address": "Vancouver, Canada",
-      "city": "Vancouver",
-      "state": "BritishColumbia",
-      "zip": 15342,
-      "phoneNumber": 54345434,
-      "email": "wadedeadpool@gmail.com",
+      "address": "Morales Residency,New York",
+      "city": "New York City",
+      "state": "New York",
+      "zip": 12345,
+      "phoneNumber": 98734232,
+      "email": "milesmorales@gmail.com",
       "bookName": "book1",
       "bookType": "family",
       "dateAdded": {
-        "year": 2016,
-        "month": 2,
-        "day": 12
+        "year": 2018,
+        "month": 12,
+        "day": 14
       },
       "id": 4
     }
@@ -127,6 +127,42 @@
         "day": 12
       },
       "id": 3
+    },
+    {
+      "firstName": "Thor",
+      "lastName": "Odinson",
+      "address": "Asgard,Yotenheim",
+      "city": "Asgard",
+      "state": "Yotenheim",
+      "zip": 87654,
+      "phoneNumber": 45231232,
+      "email": "thorodinson@yahoo.com",
+      "bookName": "book2",
+      "bookType": "family",
+      "dateAdded": {
+        "year": 2011,
+        "month": 4,
+        "day": 29
+      },
+      "id": 4
+    },
+    {
+      "firstName": "Loki",
+      "lastName": "Odinson",
+      "address": "Asgard,Yotenheim",
+      "city": "Asgard",
+      "state": "Yotenheim",
+      "zip": 87654,
+      "phoneNumber": 54289032,
+      "email": "lokiodinson@yahoo.com",
+      "bookName": "book2",
+      "bookType": "family",
+      "dateAdded": {
+        "year": 2011,
+        "month": 4,
+        "day": 29
+      },
+      "id": 5
     }
   ]
 }
