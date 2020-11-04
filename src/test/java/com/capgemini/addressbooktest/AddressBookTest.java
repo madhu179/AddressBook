@@ -228,6 +228,26 @@ public class AddressBookTest {
 		boolean result = addressbookService.checkIfJsonInSyncWithList(contact);
 		Assert.assertTrue(result);
 	}
+	
+	@Test
+	public void givenAContact_DeleteFromJsonServer_ShouldBeInSync()
+	{
+		AddressBookService addressbookService = new AddressBookService();
+		HashMap<String, List<Contact>> addressBooks = getContactList();
+		HashMap<String, AddressBook> addressBookList = addressbookService
+				.convertContactListToAddressBookInMap(addressBooks);
+		addressbookService.setAddressBookList(addressBookList);
+		Contact contact = new Contact("Loki", "Odinson", "Asgard,Yotenheim", "Asgard", "Yotenheim", 87654,
+				54289032, "lokiodinson@yahoo.com", LocalDate.parse("2011-04-29"), "book2", "family");
+		String resource = contact.bookName + "_" + contact.bookType;
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		Response response = request.delete("/"+resource+"/" + getIdFromJsonServer(resource, contact.firstName));
+		Assert.assertEquals(200, response.getStatusCode());
+		addressbookService.deleteContact(contact);	
+		Assert.assertEquals(8, addressbookService.getContactsCount());
+		addressbookService.printAddressBookList();
+	}
 		
 
 }

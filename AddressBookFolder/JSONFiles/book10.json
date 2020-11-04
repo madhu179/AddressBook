@@ -145,24 +145,6 @@
         "day": 29
       },
       "id": 4
-    },
-    {
-      "firstName": "Loki",
-      "lastName": "Odinson",
-      "address": "Asgard,Yotenheim",
-      "city": "Asgard",
-      "state": "Yotenheim",
-      "zip": 87654,
-      "phoneNumber": 54289032,
-      "email": "lokiodinson@yahoo.com",
-      "bookName": "book2",
-      "bookType": "family",
-      "dateAdded": {
-        "year": 2011,
-        "month": 4,
-        "day": 29
-      },
-      "id": 5
     }
   ]
 }

@@ -475,5 +475,15 @@ public class AddressBookService {
 		return false;
 	}
 
+	public void deleteContact(Contact contact) {
+		String key = contact.bookName + "_" + contact.bookType;
+		AddressBook addressbook = new AddressBook();
+		if (addressBookList.containsKey(key)) {
+			addressbook = addressBookList.get(key);
+			addressbook.deleteContact(contact.firstName);
+			addressBookList.replace(key, addressbook);
+		}
+	}
+
 
 }
