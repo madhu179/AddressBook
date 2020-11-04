@@ -1,4 +1,4 @@
-package databaseservice;
+package com.capgemini.databaseservice;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,14 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import models.AddressBook;
-import models.Contact;
+import com.capgemini.models.AddressBook;
+import com.capgemini.models.Contact;
 
 public class AddressBookDBService {
 
 	private PreparedStatement preparedStatement;
 	private List<Contact> contactDataList = new ArrayList<Contact>();
-	private HashMap<String, AddressBook> addressBookDataList = new HashMap<String, AddressBook>();
 
 	public List<Contact> readData() {
 		List<Contact> contactList = new ArrayList<Contact>();
@@ -63,25 +62,6 @@ public class AddressBookDBService {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	public void updatePhoneNumberInList(String name, long phone) {
-		for (Contact e : contactDataList) {
-			if (e.getFirstName().equals(name)) {
-				e.setPhoneNumber(phone);
-			}
-		}
-	}
-
-	public boolean checkDBInSyncWithList(String name) {
-		Contact contactDB = getContact(name);
-		Contact contactInList = null;
-		for (Contact e : contactDataList) {
-			if (e.getFirstName().equals(name)) {
-				contactInList = e;
-			}
-		}
-		return contactDB.equals(contactInList);
 	}
 
 	public Contact getContact(String name) {

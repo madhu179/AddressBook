@@ -1,12 +1,11 @@
-package utility;
+package com.capgemini.utility;
 
 import java.io.IOException;
 import java.util.Scanner;
 
+import com.capgemini.service.AddressBookService;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-
-import service.AddressBookService;
 
 public class AddressBookMain {
 

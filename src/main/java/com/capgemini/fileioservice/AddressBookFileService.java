@@ -1,4 +1,4 @@
-package fileioservice;
+package com.capgemini.fileioservice;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -16,6 +16,8 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.capgemini.models.AddressBook;
+import com.capgemini.models.Contact;
 import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
@@ -24,9 +26,6 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-
-import models.AddressBook;
-import models.Contact;
 
 public class AddressBookFileService {
 	private static final String HOME = System.getProperty("user.home");

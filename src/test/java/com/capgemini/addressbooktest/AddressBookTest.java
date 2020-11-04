@@ -1,18 +1,26 @@
-package addressbooktest;
+package com.capgemini.addressbooktest;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.capgemini.models.AddressBook;
+import com.capgemini.models.Contact;
+import com.capgemini.service.AddressBookService;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
@@ -21,9 +29,6 @@ import io.restassured.config.ConnectionConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import models.AddressBook;
-import models.Contact;
-import service.AddressBookService;
 
 public class AddressBookTest {
 
@@ -31,7 +36,7 @@ public class AddressBookTest {
 	public void readingFromDB_NoOfEntries_ShouldMatchActual() {
 		AddressBookService addressBookService = new AddressBookService();
 		List<Contact> contactList = addressBookService.readData();
-		boolean result = contactList.size() == 8 ? true : false;
+		boolean result = contactList.size() == 7 ? true : false;
 		Assert.assertTrue(result);
 	}
 
@@ -39,7 +44,7 @@ public class AddressBookTest {
 	public void givenNewSalary_UpdatinginDB_UsingPreparedStatement_ShouldMatch() {
 		AddressBookService addressBookService = new AddressBookService();
 		List<Contact> contactList = addressBookService.readData();
-		addressBookService.updateContact("Steve", 77789796);
+		addressBookService.updateContact("Steve", 77779796);
 		boolean result = addressBookService.checkDBInSyncWithList("Steve");
 		Assert.assertTrue(result);
 	}
@@ -56,7 +61,7 @@ public class AddressBookTest {
 	public void readingFromDB_NoOfEntries_ByGivenCity_ShouldMatchActual() {
 		AddressBookService addressBookService = new AddressBookService();
 		int noOfContacts = addressBookService.getNoOfContactsByCity("New York City");
-		boolean result = noOfContacts == 3 ? true : false;
+		boolean result = noOfContacts == 2 ? true : false;
 		Assert.assertTrue(result);
 	}
 
@@ -120,6 +125,27 @@ public class AddressBookTest {
 		return request.post("/" + resource);
 	}
 
+	public int getIdFromJsonServer(String book, String firstName) {
+		Response response = RestAssured.get("/" + book);
+		String jsonString = response.asString();
+		JSONArray jsonArray = new JSONArray(jsonString);
+		JSONObject jsonObject;
+		int count = 0;
+		for (int i = 0; i < jsonArray.length(); i++) {
+			jsonObject = jsonArray.getJSONObject(i);
+			Iterator<String> it = jsonObject.keys();
+			count = count + 1;
+			while (it.hasNext()) {
+				String key = it.next();
+				Object value = jsonObject.get(key);
+				if (value.equals(firstName)) {
+					return count;
+				}
+			}
+		}
+		return 0;
+	}
+
 	@Test
 	public void retreiveContacts_FromJsonServer_ShouldMatchCount() {
 		AddressBookService addressbookService = new AddressBookService();
@@ -147,6 +173,12 @@ public class AddressBookTest {
 		addressbookService.addAContactToAddressBookList(contact, contact.bookName, contact.bookType);
 		int CountOfContacts = addressbookService.getContactsCount();
 		Assert.assertEquals(7, CountOfContacts);
+	}
+
+	@Test
+	public void printId() {
+		int id = getIdFromJsonServer("book1_family", "Harry");
+		System.out.println(id);
 	}
 
 }

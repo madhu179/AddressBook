@@ -1,4 +1,4 @@
-package models;
+package com.capgemini.models;
 
 import java.util.*;
 
